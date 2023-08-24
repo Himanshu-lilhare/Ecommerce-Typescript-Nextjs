@@ -1,0 +1,18 @@
+.profile-page-bar{
+    width: 100vw;
+    display: flex;
+
+}
+.profile-page-bar > button{
+    flex: 1;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+.active-profile-page-bar-button{
+ 
+    background-color: var(--purple-color);
+    color: var(--background-color);
+}
