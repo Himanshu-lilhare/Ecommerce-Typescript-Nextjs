@@ -5,7 +5,7 @@ export const Home = () => {
   return (
     <main className="home ">
       <section className="left-image-section ">
-        <img src={"/heroimage.png"}  alt="djfdh" />
+        <Image width={650} height={650} src={"/heroimage.png"}  alt="djfdh" />
       </section>
       <section className="right-section ">
         <div className="right-section-content ">
