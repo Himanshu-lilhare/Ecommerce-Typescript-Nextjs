@@ -5,6 +5,20 @@ import { CustomError } from "../middleware/custumErrorClass";
 import { instance } from "..";
 import { orderModel } from "../model/order";
 import crypto from "crypto";
+import { IOrder } from "common";
+
+export const getOrders = tryCatchWrapper(async(req:CustomRequest,res:Response,next:NextFunction)=>{
+
+let user = req.user
+
+let orders:IOrder[]  = await orderModel.find({userId:user?._id}).sort({createdAt:-1})
+
+res.status(200).json({orders})
+
+
+
+})
+
 export const Checkout = tryCatchWrapper(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
     let user = req.user;

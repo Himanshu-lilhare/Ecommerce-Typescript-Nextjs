@@ -19,3 +19,4 @@ __exportStar(require("./typescript/product"), exports);
 __exportStar(require("./zod/user"), exports);
 __exportStar(require("./typescript/user"), exports);
 __exportStar(require("./typescript/cart"), exports);
+__exportStar(require("./typescript/order"), exports);

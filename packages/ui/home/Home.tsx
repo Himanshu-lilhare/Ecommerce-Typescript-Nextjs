@@ -9,7 +9,7 @@ export const Home = () => {
       </section>
       <section className="right-section ">
         <div className="right-section-content ">
-        <h1 className="right-section-head">FASHION UP YOUR LOOK</h1>
+        <h1 className="right-section-head"><span style={{display:"block",color:'#6446e7'}}>FASHION</span> UP <span style={{color:"#f76b4d"}}>YOUR</span> LOOK</h1>
 
 <Link  href={"/shop"} className="right-section-shop-link">
   <span>

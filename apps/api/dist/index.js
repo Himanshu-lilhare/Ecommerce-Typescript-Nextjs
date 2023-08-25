@@ -243,10 +243,6 @@ var userSchema = new import_mongoose4.default.Schema(
       required: true,
       minlength: 6
     },
-    avatar: {
-      public_id: String,
-      url: String
-    },
     role: {
       type: String,
       default: "user",
@@ -395,7 +391,7 @@ var addToCart = tryCatchWrapper(
     if (!isValid.success)
       return next(new CustomError(isValid.error.errors[0].message, 400));
     let user = await userModel.findOne({
-      _id: new import_mongoose5.default.Types.ObjectId((_a2 = req.user) == null ? void 0 : _a2._id),
+      _id: new import_mongoose5.default.Types.ObjectId((_a2 = req.user) == null ? void 0 : _a2._id.toString()),
       cart: {
         $elemMatch: {
           oneProduct: new import_mongoose5.default.Types.ObjectId(req.body.productId)
@@ -407,7 +403,7 @@ var addToCart = tryCatchWrapper(
       return next(new CustomError("Product doesnt exist", 400));
     if (!user) {
       let addedTOCart = await userModel.updateOne(
-        { _id: new import_mongoose5.default.Types.ObjectId((_b2 = req.user) == null ? void 0 : _b2._id) },
+        { _id: new import_mongoose5.default.Types.ObjectId((_b2 = req.user) == null ? void 0 : _b2._id.toString()) },
         {
           $push: {
             cart: {
@@ -478,8 +474,8 @@ var getUserCart = tryCatchWrapper(
     console.log(user + " it is a user");
     if (!user)
       return next(new CustomError("You are Not LoggedIn", 400));
-    user = await userModel.findById(user._id).populate("cart.oneProduct");
-    let userCart = user == null ? void 0 : user.cart;
+    let users = await userModel.findById(user._id).populate("cart.oneProduct");
+    let userCart = users == null ? void 0 : users.cart;
     res.status(200).json({
       userCart
     });
@@ -525,7 +521,8 @@ var import_express4 = __toESM(require("express"));
 var import_mongoose6 = __toESM(require("mongoose"));
 var orderSchema = new import_mongoose6.default.Schema({
   orderId: {
-    type: String
+    type: String,
+    required: true
   },
   userId: {
     type: import_mongoose6.default.Schema.Types.ObjectId,
@@ -579,6 +576,11 @@ var orderModel = import_mongoose6.default.model("order", orderSchema);
 
 // src/controller/order.ts
 var import_crypto = __toESM(require("crypto"));
+var getOrders = tryCatchWrapper(async (req, res, next) => {
+  let user = req.user;
+  let orders = await orderModel.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 });
+  res.status(200).json({ orders });
+});
 var Checkout = tryCatchWrapper(
   async (req, res, next) => {
     let user = req.user;
@@ -652,6 +654,7 @@ var paymentVerification = tryCatchWrapper(
 var orderRouter = import_express4.default.Router();
 orderRouter.route("/order/checkout").post(AuthenticateUser, Checkout);
 orderRouter.route("/order/verify").post(AuthenticateUser, paymentVerification);
+orderRouter.route("/getOrders").get(AuthenticateUser, getOrders);
 var order_default = orderRouter;
 
 // src/index.ts

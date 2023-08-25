@@ -8,3 +8,4 @@ export * from "./checkout/Checkout"
 export * from "./createproduct/CreateProduct"
 export * from './ServerLink'
 export * from "./profile/profile"
+export * from "./signup/SignUp"

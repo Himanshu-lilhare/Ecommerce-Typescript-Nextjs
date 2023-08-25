@@ -2,21 +2,16 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { cartAtom, userAtom } from "store";
 import axios from "axios";
-import { useSetRecoilState } from "recoil";
 import { serverLink } from "../ServerLink";
-import { getCart } from "../apiCalls/cart/getCart";
-import "./login.css"
 
 type LoginForm = {
+  name: string;
   email: string;
   password: string;
 };
 
-export const Login = () => {
-  const setUser = useSetRecoilState(userAtom);
-  const setCart = useSetRecoilState(cartAtom)
+export const SignUp = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<LoginForm>();
   const router = useRouter();
@@ -30,8 +25,9 @@ export const Login = () => {
       setLoading(true);
 
       const res = await axios.post(
-        `${serverLink}/login`,
+        `${serverLink}/register`,
         {
+          name: data.name,
           email: data.email,
           password: data.password,
         },
@@ -44,18 +40,9 @@ export const Login = () => {
         }
       );
 
-      console.log("Authentictae true ", res);
-
       setLoading(false);
-      setUser({ isAuthenticated: true, user: res?.data?.user });
-      router.push("/");
-      const cartData = await getCart()
-      
-      if(cartData.userCart.length > 0) {
-        setCart(cartData.userCart);
-      }
 
- 
+      router.push("/login");
     } catch (error) {
       console.log("error");
       setLoading(false);
@@ -64,9 +51,33 @@ export const Login = () => {
 
   return (
     <>
-      <form className="login-signin-form" onSubmit={handleSubmit(logIn)} noValidate>
+      <form
+        className="login-signin-form"
+        onSubmit={handleSubmit(logIn)}
+        noValidate
+      >
         <div>
-          <label className="login-signin-labels"  htmlFor="email">E-mail</label>
+          <label className="login-signin-labels" htmlFor="name">
+            Name
+          </label>
+          <input
+            className="login-signin-inputs"
+            required
+            type="text"
+            {...form.register("name", {
+              required: "Name is Required",
+              minLength: {
+                value: 3,
+                message: "Minimun 3 Characters Required",
+              },
+            })}
+          />
+          <p className="login-signin-fields-error">{errors.name?.message}</p>
+        </div>
+        <div>
+          <label className="login-signin-labels" htmlFor="email">
+            E-mail
+          </label>
           <input
             required
             type="mail"
@@ -82,7 +93,9 @@ export const Login = () => {
           <p className="login-signin-fields-error">{errors.email?.message}</p>
         </div>
         <div>
-          <label  className="login-signin-labels" htmlFor="password">Password</label>
+          <label className="login-signin-labels" htmlFor="password">
+            Password
+          </label>
           <input
             required
             type="password"
@@ -97,13 +110,15 @@ export const Login = () => {
               },
               minLength: {
                 value: 7,
-                message: "Min Length is 7",
+                message: "Min Length is 7 Required",
               },
             })}
           />
-          <p className="login-signin-fields-error">{errors.password?.message}</p>
+          <p className="login-signin-fields-error">
+            {errors.password?.message}
+          </p>
         </div>
-        <button type="submit"> {loading ? "Loading...." : "LogIn"}</button>
+        <button type="submit"> {loading ? "Loading...." : "Sign In"}</button>
       </form>
     </>
   );

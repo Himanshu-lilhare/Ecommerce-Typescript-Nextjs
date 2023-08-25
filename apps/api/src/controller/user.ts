@@ -79,10 +79,10 @@ export const addToCart = tryCatchWrapper(
 
     if (!isValid.success)
       return next(new CustomError(isValid.error.errors[0].message, 400));
-
+ 
     let user = await userModel
       .findOne({
-        _id: new mongoose.Types.ObjectId(req.user?._id),
+        _id: new mongoose.Types.ObjectId(req.user?._id.toString()),
         cart: {
           $elemMatch: {
             oneProduct: new mongoose.Types.ObjectId(req.body.productId),
@@ -96,7 +96,7 @@ export const addToCart = tryCatchWrapper(
 
     if (!user) {
       let addedTOCart = await userModel.updateOne(
-        { _id: new mongoose.Types.ObjectId(req.user?._id) },
+        { _id: new mongoose.Types.ObjectId(req.user?._id.toString()) },
         {
           $push: {
             cart: {
@@ -180,8 +180,8 @@ export const getUserCart = tryCatchWrapper(
     console.log(user + " it is a user");
     if (!user) return next(new CustomError("You are Not LoggedIn", 400));
 
-    user = await userModel.findById(user._id).populate("cart.oneProduct");
-    let userCart = user?.cart;
+    let users = await userModel.findById(user._id).populate("cart.oneProduct");
+    let userCart = users?.cart;
     res.status(200).json({
       userCart,
     });

@@ -4,6 +4,7 @@ import { string } from "zod";
 const orderSchema = new mongoose.Schema({
   orderId: {
     type: String,
+    required:true
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -17,6 +18,7 @@ const orderSchema = new mongoose.Schema({
     phone: String,
     zipcode: String,
     country: String,
+   
   },
   orderItems: [
     {

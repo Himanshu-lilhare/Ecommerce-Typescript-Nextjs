@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 import { UserDocument } from "./user";
 
-export interface IOrder {
-    orderId?: string; // Note: You have orderId as optional in the schema
+export interface IOrder{
+    orderId: string; // Note: You have orderId as optional in the schema
     userId: string | mongoose.Types.ObjectId | UserDocument;
     address: {
       street?: string; // Note: You have address fields as optional in the schema
@@ -24,3 +24,5 @@ export interface IOrder {
     orderStatus: 'processing' | 'delivered';
     createdAt: Date;
   }
+
+ 
