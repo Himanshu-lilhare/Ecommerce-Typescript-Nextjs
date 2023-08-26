@@ -1,47 +1,72 @@
-.checkout-main{
-    width: 100%;
-  
-   overflow-y: scroll;
-   padding: 1rem;
+.checkout-main {
+  width: 100%;
+
+  overflow-y: scroll;
+  padding: 1rem;
 }
-.user-orders-and-total{
-    position: relative;
-    height: 44vh;
-    overflow-y: scroll;
+.user-orders-and-total {
+  position: relative;
+  height: 44vh;
+  overflow-y: scroll;
 }
-.user-order-and-total-footer{
-    position:absolute;
-    bottom: 0;
-  
-    width: 100%;
-    padding: 1rem;
+.user-order-and-total-footer {
+  position: absolute;
+  bottom: 0;
+
+  width: 100%;
+  padding: 1rem;
 }
-.final-total{
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
+.final-total {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
 }
-.proceed-to-pay-button{
-    margin-left: auto;
+.proceed-to-pay-button {
+  margin-left: auto;
 }
-.user-order{
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    padding: 1rem 1rem;
-    align-items: center;
+.user-order {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 1rem 1rem;
+  align-items: center;
 }
 
-.user-addresses{
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
+.user-addresses {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
 }
 
-.address-label{
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    font-size: 1.8rem;
+.address-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  font-size: 1.8rem;
+}
+.pay-modal {
+  font-size: 2rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 200000;
+  background-color: var(--background-color);
+}
+.pay-modal-content {
+  padding: 2rem;
+}
+.pay-modal-content > button{
+ margin: 1rem;
+ letter-spacing: 0.4px;
+  }
+.pay-modal-overlay {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.439);
+  z-index: 200000;
 }

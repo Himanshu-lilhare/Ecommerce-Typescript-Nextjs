@@ -5,17 +5,19 @@ import { addressAtom, cartAtom, cartTotal, userAtom } from "store";
 import Script from "next/script";
 import { serverLink } from "../ServerLink";
 import { CartItems } from "common";
+import { useState } from "react";
+
 export function CheckoutFooter() {
   const finalTotal = useRecoilValue(cartTotal);
   const address = useRecoilValue(addressAtom);
-  const cartItems:CartItems[] = useRecoilValue(cartAtom);
+  const cartItems: CartItems[] = useRecoilValue(cartAtom);
   const user = useRecoilValue(userAtom);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   async function checkoutHandler() {
     if (!address) {
       console.log(address);
-      console.log(cartItems)
-     return alert("Please Select Address");
-   
+      console.log(cartItems);
+      return alert("Please Select Address");
     }
 
     const { data } = await axios.post(
@@ -26,7 +28,7 @@ export function CheckoutFooter() {
         address,
       },
       {
-        withCredentials:true
+        withCredentials: true,
       }
     );
 
@@ -50,7 +52,11 @@ export function CheckoutFooter() {
         color: "#6446e7",
       },
     };
-    console.log(user.user?.email , user.user?.name , data?.order?.id + " ab open hua ")
+    console.log(
+      user.user?.email,
+      user.user?.name,
+      data?.order?.id + " ab open hua "
+    );
     const paymentObject = new (window as any).Razorpay(options);
 
     paymentObject.open();
@@ -67,13 +73,46 @@ export function CheckoutFooter() {
           <h2 className="font-size-2rem">You Have To Pay</h2>
           <h2 className="font-size-2rem">{finalTotal}</h2>
         </div>
+
         <button
-          onClick={checkoutHandler}
+          // onClick={checkoutHandler}
+          onClick={() => setOpenModal(true)}
           className="proceed-to-pay-button purple-button"
         >
           Proceed To Pay
         </button>
+        <PayModal open={openModal} close={() => setOpenModal(false)}>
+          <div className="pay-modal-content">
+            <button className="pink-button" >Cash On Delivery</button>
+            <button className="purple-button" onClick={checkoutHandler}>Pay Online</button>
+          </div>
+        </PayModal>
       </footer>
     </>
   );
 }
+
+const PayModal = ({
+  open,
+  close,
+  children,
+}: {
+  open: boolean;
+  close: () => void;
+  children: React.ReactNode;
+}) => {
+  if (!open) return null;
+  return (
+    <>
+      <div className="pay-modal-overlay" onClick={close}>
+        {" "}
+      </div>
+      <div className="pay-modal">
+  
+        {children}
+      </div>
+    </>
+  );
+};
+
+export default PayModal;
