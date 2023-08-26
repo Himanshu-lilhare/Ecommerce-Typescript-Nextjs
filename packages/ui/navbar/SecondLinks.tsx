@@ -33,13 +33,15 @@ const SecondLinks = () => {
               {cart_Length ? cart_Length : 0}
             </p>
           </Link>
-
-          <Link href={"/profile"} className="profile-link purple-button">
+      <div className="profile-and-logout-div">
+      <Link href={"/profile"} className="profile-link purple-button">
             Profile
           </Link>
           <button onClick={logoutHandler} className="logout-button pink-button">
             LogOut
           </button>
+      </div>
+      
         </>
       ) : (
         <>

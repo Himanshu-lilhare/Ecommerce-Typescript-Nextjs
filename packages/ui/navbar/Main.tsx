@@ -53,16 +53,20 @@ export const Navbar = () => {
   }, [setCartItems, setUser]);
 
   useEffect(() => {
-    window.addEventListener("resize", () => {
+    function adjustWidth() {
       if (window.innerWidth < 450) {
         setSmallSize(true);
       }
       if (window.innerWidth > 450) {
         setSmallSize(false);
       }
+    }
+    adjustWidth();
+    window.addEventListener("resize", () => {
+      adjustWidth();
     });
 
-    return ()=>window.removeEventListener("resize",()=>{})
+    return () => window.removeEventListener("resize", () => {});
   }, []);
 
   return (

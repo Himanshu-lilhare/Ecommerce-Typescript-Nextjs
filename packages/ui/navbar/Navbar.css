@@ -109,9 +109,20 @@
   .nav-wrapper {
     padding: 1rem 3rem;
   }
-  .nav-head {
-   content: FW !important;
+ 
+  
+
+ 
+}
+
+@media (max-width: 285px) {
+  .profile-and-logout-div{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
+ 
+  
   
 
  
