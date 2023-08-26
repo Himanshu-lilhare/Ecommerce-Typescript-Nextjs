@@ -23,6 +23,7 @@
     "@types/recoil": "^0.0.9",
     "axios": "^1.4.0",
     "lodash": "^4.17.21",
+    "razorpay": "^2.9.2",
     "react-hook-form": "^7.45.4",
     "react-icons": "^4.10.1",
     "recoil": "^0.7.7",

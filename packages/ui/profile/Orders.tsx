@@ -6,7 +6,8 @@ import { useRecoilValue } from "recoil";
 import { activeButtonAtom, barData } from "store";
 import { serverLink } from "../ServerLink";
 import { IOrder } from "common";
-import Link from "next/link"
+import Link from "next/link";
+import Image from "next/image";
 const months = [
   "January",
   "February",
@@ -45,7 +46,7 @@ const Orders = () => {
 export default Orders;
 
 function AllOrders() {
-  const [orders, setOrders] = useState<IOrder[] | null>(null);
+  const [orders, setOrders] = useState<IOrder[] | null | []>(null);
   const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
     async function fetchOrders() {
@@ -67,6 +68,20 @@ function AllOrders() {
   if (loading) {
     return <h1>Loading</h1>;
   }
+  if (!orders || orders.length === 0) {
+    return (
+      <Image
+      className="no-order-image"
+        width={750}
+        height={720}
+        alt="no-orders"
+        src={
+          "https://res.cloudinary.com/dtjpdqgb6/image/upload/v1693052549/Orders-No-order_c4pczo.webp"
+        }
+      />
+    );
+  }
+
   return (
     <main className="profile-orders-main light-border">
       {orders &&
@@ -84,24 +99,27 @@ function Order({ order }: { order: IOrder }) {
   let weekDay = date.getDay();
   return (
     <>
-    <Link className="profile-order light-border" style={{textDecoration:'none',color:"black"}} href={"/"}>
-   
-    <div className="profile-single-order">
-        <h3 className="profile-order-date pdd" >
-          Order-Date: {tarik} {months[month]} {daysOfWeek[weekDay]}{" "}
-          {date.getFullYear()}{" "}
-        </h3>
-      </div>
-      <div className="profile-single-order ">
-        <h3  className="profile-orderid pdd" >Order-Id : {order.orderId}</h3>
-      </div>
-      <div className="profile-single-order">
-        <h3  className="profile-order-status pdd" >Order-Status: <span style={{color:"green"}}>{order.orderStatus}</span></h3>
-      </div>
-   
- 
-    </Link>
-     
-        </>
+      <Link
+        className="profile-order light-border"
+        style={{ textDecoration: "none", color: "black" }}
+        href={"/"}
+      >
+        <div className="profile-single-order">
+          <h3 className="profile-order-date pdd">
+            Order-Date: {tarik} {months[month]} {daysOfWeek[weekDay]}{" "}
+            {date.getFullYear()}{" "}
+          </h3>
+        </div>
+        <div className="profile-single-order ">
+          <h3 className="profile-orderid pdd">Order-Id : {order.orderId}</h3>
+        </div>
+        <div className="profile-single-order">
+          <h3 className="profile-order-status pdd">
+            Order-Status:{" "}
+            <span style={{ color: "green" }}>{order.orderStatus}</span>
+          </h3>
+        </div>
+      </Link>
+    </>
   );
 }

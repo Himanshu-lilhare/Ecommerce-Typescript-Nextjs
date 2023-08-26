@@ -13,7 +13,7 @@ export function CheckoutFooter() {
   const cartItems: CartItems[] = useRecoilValue(cartAtom);
   const user = useRecoilValue(userAtom);
   const [openModal, setOpenModal] = useState<boolean>(false);
-  async function checkoutHandler() {
+  async function checkoutHandler(isOnCash: boolean) {
     if (!address) {
       console.log(address);
       console.log(cartItems);
@@ -26,12 +26,14 @@ export function CheckoutFooter() {
         cartItems: cartItems,
         cartTotal: finalTotal,
         address,
+        isOnCash,
       },
       {
         withCredentials: true,
       }
     );
-
+    if (isOnCash) return;
+console.log(data)
     const options = {
       key: "rzp_test_LWJbzFhEywmrc4", // Enter the Key ID generated from the Dashboard
       amount: data?.order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -50,6 +52,14 @@ export function CheckoutFooter() {
       },
       theme: {
         color: "#6446e7",
+      },
+      modal: {
+        handleback: true,
+        ondismiss: async() => {
+           await axios.delete(`${serverLink}/deleteorder/${data?.order?.id}`,{
+            withCredentials:true
+           })
+        },
       },
     };
     console.log(
@@ -83,8 +93,13 @@ export function CheckoutFooter() {
         </button>
         <PayModal open={openModal} close={() => setOpenModal(false)}>
           <div className="pay-modal-content">
-            <button className="pink-button" >Cash On Delivery</button>
-            <button className="purple-button" onClick={checkoutHandler}>Pay Online</button>
+            <button className="pink-button">Cash On Delivery</button>
+            <button
+              className="purple-button"
+              onClick={() => checkoutHandler(false)}
+            >
+              Pay Online
+            </button>
           </div>
         </PayModal>
       </footer>
@@ -107,10 +122,7 @@ const PayModal = ({
       <div className="pay-modal-overlay" onClick={close}>
         {" "}
       </div>
-      <div className="pay-modal">
-  
-        {children}
-      </div>
+      <div className="pay-modal">{children}</div>
     </>
   );
 };

@@ -1,11 +1,11 @@
+import { IOrder } from "common";
 import mongoose from "mongoose";
 import { string } from "zod";
 
-const orderSchema = new mongoose.Schema({
-  orderId: {
-    type: String,
-    required:true
-  },
+const orderSchema = new mongoose.Schema<IOrder>({
+orderId:{
+  type:String
+},
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
@@ -32,13 +32,13 @@ const orderSchema = new mongoose.Schema({
   paymentInfo: {
     id: {
       type: String,
-      required: true,
+    
     },
     status: {
       type: String,
       required: true,
       default: "pending",
-      enum: ["pending", "processing", "paid"],
+      enum: ["pending", "paid"],
     },
 
     amountPaid: {

@@ -521,8 +521,7 @@ var import_express4 = __toESM(require("express"));
 var import_mongoose6 = __toESM(require("mongoose"));
 var orderSchema = new import_mongoose6.default.Schema({
   orderId: {
-    type: String,
-    required: true
+    type: String
   },
   userId: {
     type: import_mongoose6.default.Schema.Types.ObjectId,
@@ -548,14 +547,13 @@ var orderSchema = new import_mongoose6.default.Schema({
   ],
   paymentInfo: {
     id: {
-      type: String,
-      required: true
+      type: String
     },
     status: {
       type: String,
       required: true,
       default: "pending",
-      enum: ["pending", "processing", "paid"]
+      enum: ["pending", "paid"]
     },
     amountPaid: {
       type: Number,
@@ -576,45 +574,76 @@ var orderModel = import_mongoose6.default.model("order", orderSchema);
 
 // src/controller/order.ts
 var import_crypto = __toESM(require("crypto"));
-var getOrders = tryCatchWrapper(async (req, res, next) => {
-  let user = req.user;
-  let orders = await orderModel.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 });
-  res.status(200).json({ orders });
-});
+var getOrders = tryCatchWrapper(
+  async (req, res, next) => {
+    let user = req.user;
+    let orders = await orderModel.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 });
+    res.status(200).json({ orders });
+  }
+);
+var deleteOrder = tryCatchWrapper(
+  async (req, res, next) => {
+    let orderId = req.params.orderId;
+    if (!orderId)
+      return next(new CustomError("Please Provide OrderId", 400));
+    await orderModel.deleteOne({ orderId });
+    res.status(200).json({ message: "deleted Successfully" });
+  }
+);
 var Checkout = tryCatchWrapper(
   async (req, res, next) => {
     let user = req.user;
     if (!user)
       next(new CustomError("you are not logged in", 400));
     const body = req == null ? void 0 : req.body;
-    console.log(body.cartTotal);
-    let options = {
-      amount: Math.ceil(body.cartTotal) * 100,
-      currency: "INR"
-    };
-    console.log("order create karne bhi aaya");
-    console.log(user && user._id);
-    let data = await instance.orders.create(options);
-    let dataToBeInsert = {
-      orderId: data.id,
-      userId: user && user._id,
-      address: body == null ? void 0 : body.address,
-      orderItems: body == null ? void 0 : body.cartItems.map((item) => {
-        return {
-          _id: item == null ? void 0 : item.oneProduct,
-          qty: item == null ? void 0 : item.qty
-        };
-      }),
-      paymentInfo: {
-        id: "qwe",
-        // for now we give random id , after payment verify we will give real id
-        amountPaid: Math.ceil(body.cartTotal)
-      }
-    };
-    let createdOrderInDb = await orderModel.create(dataToBeInsert);
-    res.status(200).json({
-      order: data
-    });
+    if (body.isOnCash) {
+      let dataToBeInsert = {
+        userId: user && user._id,
+        address: body == null ? void 0 : body.address,
+        orderItems: body == null ? void 0 : body.cartItems.map((item) => {
+          return {
+            _id: item == null ? void 0 : item.oneProduct,
+            qty: item == null ? void 0 : item.qty
+          };
+        }),
+        paymentInfo: {
+          amountPaid: Math.ceil(body.cartTotal)
+        }
+      };
+      await orderModel.create(dataToBeInsert);
+      res.status(200).json({
+        message: "Ordered Successfully"
+      });
+    } else {
+      let options = {
+        amount: Math.ceil(body.cartTotal) * 100,
+        currency: "INR"
+      };
+      console.log("order create karne bhi aaya");
+      console.log(user && user._id);
+      let data = await instance.orders.create(options);
+      let dataToBeInsert = {
+        orderId: data.id,
+        userId: user && user._id,
+        address: body == null ? void 0 : body.address,
+        orderItems: body == null ? void 0 : body.cartItems.map((item) => {
+          return {
+            _id: item == null ? void 0 : item.oneProduct,
+            qty: item == null ? void 0 : item.qty
+          };
+        }),
+        paymentInfo: {
+          id: "qwe",
+          // for now we give random id , after payment verify we will give real id
+          amountPaid: Math.ceil(body.cartTotal)
+        }
+      };
+      let createdOrderInDb = await orderModel.create(dataToBeInsert);
+      console.log(createdOrderInDb);
+      res.status(200).json({
+        order: data
+      });
+    }
   }
 );
 var paymentVerification = tryCatchWrapper(
@@ -643,7 +672,7 @@ var paymentVerification = tryCatchWrapper(
         user.cart = void 0;
         await user.save();
       }
-      res.status(200).json({ paymentId: req.body.razorpay_payment_id, order });
+      res.status(200).redirect(`http://localhost:3000/profile?orderId=${order.orderId}`);
     } else {
       res.status(400).json({ message: "Hey Fake Guy" });
     }
@@ -655,6 +684,7 @@ var orderRouter = import_express4.default.Router();
 orderRouter.route("/order/checkout").post(AuthenticateUser, Checkout);
 orderRouter.route("/order/verify").post(AuthenticateUser, paymentVerification);
 orderRouter.route("/getOrders").get(AuthenticateUser, getOrders);
+orderRouter.route("/deleteorder/:orderId").delete(AuthenticateUser, deleteOrder);
 var order_default = orderRouter;
 
 // src/index.ts

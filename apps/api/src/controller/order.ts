@@ -7,17 +7,29 @@ import { orderModel } from "../model/order";
 import crypto from "crypto";
 import { IOrder } from "common";
 
-export const getOrders = tryCatchWrapper(async(req:CustomRequest,res:Response,next:NextFunction)=>{
+export const getOrders = tryCatchWrapper(
+  async (req: CustomRequest, res: Response, next: NextFunction) => {
+    let user = req.user;
 
-let user = req.user
+    let orders: IOrder[] = await orderModel
+      .find({ userId: user?._id })
+      .sort({ createdAt: -1 });
 
-let orders:IOrder[]  = await orderModel.find({userId:user?._id}).sort({createdAt:-1})
+    res.status(200).json({ orders });
+  }
+);
 
-res.status(200).json({orders})
+export const deleteOrder = tryCatchWrapper(
+  async (req: CustomRequest, res: Response, next: NextFunction) => {
+  
+    let orderId = req.params.orderId
 
+    if(!orderId) return next(new CustomError("Please Provide OrderId",400))
 
-
-})
+    await orderModel.deleteOne({orderId})
+    res.status(200).json({ message:"deleted Successfully" });
+  }
+);
 
 export const Checkout = tryCatchWrapper(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
@@ -25,42 +37,61 @@ export const Checkout = tryCatchWrapper(
 
     if (!user) next(new CustomError("you are not logged in", 400));
     const body = req?.body;
-    console.log(body.cartTotal);
-    let options = {
-      amount: Math.ceil(body.cartTotal) * 100,
-      currency: "INR",
-    };
-    console.log("order create karne bhi aaya");
-    console.log(user && user._id);
-    let data = await instance.orders.create(options);
+    if (body.isOnCash) {
+      let dataToBeInsert = {
+        userId: user && user._id,
+        address: body?.address,
+        orderItems: body?.cartItems.map((item: any) => {
+          return {
+            _id: item?.oneProduct,
+            qty: item?.qty,
+          };
+        }),
+        paymentInfo: {
+          amountPaid: Math.ceil(body.cartTotal),
+        },
+      };
+      await orderModel.create(dataToBeInsert);
 
-    //   async(err, data) => {
-    //   if (err) {
-    //     return console.log("error aayyi");
-    //   }
+      res.status(200).json({
+        message: "Ordered Successfully",
+      });
+    } else {
+      let options = {
+        amount: Math.ceil(body.cartTotal) * 100,
+        currency: "INR",
+      };
+      console.log("order create karne bhi aaya");
+      console.log(user && user._id);
+      let data = await instance.orders.create(options);
 
-    let dataToBeInsert = {
-      orderId: data.id,
-      userId: user && user._id,
-      address: body?.address,
-      orderItems: body?.cartItems.map((item: any) => {
-        return {
-          _id: item?.oneProduct,
-          qty: item?.qty,
-        };
-      }),
-      paymentInfo: {
-        id: "qwe", // for now we give random id , after payment verify we will give real id
+      //   async(err, data) => {
+      //   if (err) {
+      //     return console.log("error aayyi");
+      //   }
 
-        amountPaid: Math.ceil(body.cartTotal),
-      },
-    };
+      let dataToBeInsert = {
+        orderId: data.id,
+        userId: user && user._id,
+        address: body?.address,
+        orderItems: body?.cartItems.map((item: any) => {
+          return {
+            _id: item?.oneProduct,
+            qty: item?.qty,
+          };
+        }),
+        paymentInfo: {
+          id: "qwe", // for now we give random id , after payment verify we will give real id
 
-    let createdOrderInDb = await orderModel.create(dataToBeInsert);
-
-    res.status(200).json({
-      order: data,
-    });
+          amountPaid: Math.ceil(body.cartTotal),
+        },
+      };
+      let createdOrderInDb = await orderModel.create(dataToBeInsert);
+console.log(createdOrderInDb)
+      res.status(200).json({
+        order: data,
+      });
+    }
   }
 );
 
@@ -94,10 +125,10 @@ export const paymentVerification = tryCatchWrapper(
       let user = req.user;
       if (user) {
         user.cart = undefined;
-        await user.save()
+        await user.save();
       }
 
-      res.status(200).json({ paymentId: req.body.razorpay_payment_id, order });
+      res.status(200).redirect(`http://localhost:3000/profile?orderId=${order.orderId}`);
     } else {
       res.status(400).json({ message: "Hey Fake Guy" });
     }
