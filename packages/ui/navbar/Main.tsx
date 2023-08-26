@@ -5,19 +5,19 @@ import { useEffect, useState } from "react";
 import { HiMenu } from "react-icons/hi";
 import NavHead from "./NavHead";
 import SecondLinks from "./SecondLinks";
-import {  useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { cartAtom, menuAtom, userAtom } from "store";
 import axios from "axios";
 import FirstLinks from "./FirstLinks";
 import { serverLink } from "../ServerLink";
 import { getCart } from "../apiCalls/cart/getCart";
 
-
 export const Navbar = () => {
- const setMenu = useSetRecoilState(menuAtom);
+  const setMenu = useSetRecoilState(menuAtom);
   const setUser = useSetRecoilState(userAtom);
-const setCartItems = useSetRecoilState(cartAtom)
-const [sticky,setSticky]=useState(false)
+  const setCartItems = useSetRecoilState(cartAtom);
+  const [sticky, setSticky] = useState(false);
+  const [smallSize, setSmallSize] = useState<boolean>(false);
   useEffect(() => {
     async function fetchBaby() {
       try {
@@ -27,15 +27,13 @@ const [sticky,setSticky]=useState(false)
 
         setUser({ isAuthenticated: true, user: data?.user });
 
-        
         // const { data:data1 } = await axios.get(`${serverLink}/getCartItems`, {
         //   withCredentials: true,
         // });
-        const data1 = await getCart()
-        if(data1.userCart.length > 0) {
+        const data1 = await getCart();
+        if (data1.userCart.length > 0) {
           setCartItems(data1.userCart);
         }
-     
       } catch (error) {
         alert(error);
       }
@@ -43,32 +41,44 @@ const [sticky,setSticky]=useState(false)
 
     fetchBaby();
 
-    window.addEventListener("scroll",()=>{
-         
-    let navbar = document.getElementsByClassName("nav-bar")
-  let navbarBotom = navbar[0].getBoundingClientRect().bottom
-  if(window.scrollY > navbarBotom){
-    setSticky(true)
-  }else{
-    setSticky(false)
-  }
-    
+    window.addEventListener("scroll", () => {
+      let navbar = document.getElementsByClassName("nav-bar");
+      let navbarBotom = navbar[0].getBoundingClientRect().bottom;
+      if (window.scrollY > navbarBotom) {
+        setSticky(true);
+      } else {
+        setSticky(false);
+      }
+    });
+  }, [setCartItems, setUser]);
 
-    })
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      if (window.innerWidth < 450) {
+        setSmallSize(true);
+      }
+      if (window.innerWidth > 450) {
+        setSmallSize(false);
+      }
+    });
+
+    return ()=>window.removeEventListener("resize",()=>{})
   }, []);
 
   return (
-    <nav style={{width:"100%"}} className={`nav-bar ${sticky ? "sticky" : ''}`}>
+    <nav
+      style={{ width: "100%" }}
+      className={`nav-bar ${sticky ? "sticky" : ""}`}
+    >
       <div className="nav-wrapper">
         <div className="nav-head-wrapper">
           <span className="menu-icon" onClick={() => setMenu((prev) => !prev)}>
             <HiMenu fontSize={20} />
           </span>
-          <NavHead />
+          <NavHead smallSize={smallSize} />
         </div>
         <div className="nav-link-wrapper">
-       
-         <FirstLinks/>
+          <FirstLinks />
           <SecondLinks />
         </div>
       </div>
