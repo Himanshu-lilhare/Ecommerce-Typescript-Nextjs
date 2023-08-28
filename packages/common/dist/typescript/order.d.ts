@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { UserDocument } from "./user";
 export interface IOrder {
+    _id: string | mongoose.ObjectId;
     orderId?: string;
     userId: string | mongoose.Types.ObjectId | UserDocument;
     address: {

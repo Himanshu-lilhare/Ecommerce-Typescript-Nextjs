@@ -51,11 +51,12 @@ export const Checkout = tryCatchWrapper(
           amountPaid: Math.ceil(body.cartTotal),
         },
       };
-      await orderModel.create(dataToBeInsert);
-
-      res.status(200).json({
-        message: "Ordered Successfully",
-      });
+     const order =  await orderModel.create(dataToBeInsert);
+     if (user) {
+      user.cart = undefined;
+      await user.save();
+    }
+res.status(200).json({success:true})
     } else {
       let options = {
         amount: Math.ceil(body.cartTotal) * 100,

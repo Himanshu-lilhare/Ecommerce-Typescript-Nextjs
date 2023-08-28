@@ -23,8 +23,8 @@ const Product = ({ product }: Props) => {
      
     <div className="shop-product-detail-div" style={{width:"100%",padding:'0.6rem'}}>
     <h2  className="product-name">{product.name}</h2>
-      <p className="product-price">{product.price}</p>
-      <p className="product-ratings">Ratings : {product.ratings}</p>
+      <p className="product-price">Price : {product.price}</p>
+
       <AddToCartButton product={product}/>
     </div>
    

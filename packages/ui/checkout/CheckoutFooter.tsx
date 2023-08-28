@@ -1,18 +1,23 @@
 "use client";
 import axios from "axios";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { addressAtom, cartAtom, cartTotal, userAtom } from "store";
 import Script from "next/script";
 import { serverLink } from "../ServerLink";
 import { CartItems } from "common";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 export function CheckoutFooter() {
   const finalTotal = useRecoilValue(cartTotal);
   const address = useRecoilValue(addressAtom);
   const cartItems: CartItems[] = useRecoilValue(cartAtom);
+  const setCartItems = useSetRecoilState(cartAtom);
   const user = useRecoilValue(userAtom);
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
   async function checkoutHandler(isOnCash: boolean) {
     if (!address) {
       console.log(address);
@@ -20,56 +25,70 @@ export function CheckoutFooter() {
       return alert("Please Select Address");
     }
 
-    const { data } = await axios.post(
-      `${serverLink}/order/checkout`,
-      {
-        cartItems: cartItems,
-        cartTotal: finalTotal,
-        address,
-        isOnCash,
-      },
-      {
-        withCredentials: true,
+    try {
+      if (isOnCash) {
+        setLoading(true);
       }
-    );
-    if (isOnCash) return;
-console.log(data)
-    const options = {
-      key: "rzp_test_LWJbzFhEywmrc4", // Enter the Key ID generated from the Dashboard
-      amount: data?.order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-      currency: "INR",
-      name: "FIT WEAR",
-      description: "Test Transaction",
-      image: "https://example.com/your_logo",
-      order_id: data?.order?.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-      callback_url: `${serverLink}/order/verify`,
-      prefill: {
-        name: user?.user?.name,
-        email: user?.user?.email,
-      },
-      notes: {
-        address: "Razorpay Corporate Office",
-      },
-      theme: {
-        color: "#6446e7",
-      },
-      modal: {
-        handleback: true,
-        ondismiss: async() => {
-           await axios.delete(`${serverLink}/deleteorder/${data?.order?.id}`,{
-            withCredentials:true
-           })
-        },
-      },
-    };
-    console.log(
-      user.user?.email,
-      user.user?.name,
-      data?.order?.id + " ab open hua "
-    );
-    const paymentObject = new (window as any).Razorpay(options);
 
-    paymentObject.open();
+      const { data } = await axios.post(
+        `${serverLink}/order/checkout`,
+        {
+          cartItems: cartItems,
+          cartTotal: finalTotal,
+          address,
+          isOnCash,
+        },
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+          withCredentials: true,
+        }
+      );
+      if (isOnCash && data.success) {
+        setCartItems([]);
+        setLoading(false);
+        toast.success('Ordered Successfully')
+        return router.push("/profile");
+      }
+      console.log(data);
+      const options = {
+        key: "rzp_test_LWJbzFhEywmrc4", // Enter the Key ID generated from the Dashboard
+        amount: data?.order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        currency: "INR",
+        name: "FIT WEAR",
+        description: "Test Transaction",
+        image: "https://example.com/your_logo",
+        order_id: data?.order?.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        callback_url: `${serverLink}/order/verify`,
+        prefill: {
+          name: user?.user?.name,
+          email: user?.user?.email,
+        },
+        notes: {
+          address: "Razorpay Corporate Office",
+        },
+        theme: {
+          color: "#6446e7",
+        },
+        modal: {
+          handleback: true,
+          ondismiss: async () => {
+            await axios.delete(`${serverLink}/deleteorder/${data?.order?.id}`, {
+              withCredentials: true,
+            });
+          },
+        },
+      };
+      console.log(
+        user.user?.email,
+        user.user?.name,
+        data?.order?.id + " ab open hua "
+      );
+      const paymentObject = new (window as any).Razorpay(options);
+
+      paymentObject.open();
+    } catch (error) {}
   }
 
   return (
@@ -93,7 +112,14 @@ console.log(data)
         </button>
         <PayModal open={openModal} close={() => setOpenModal(false)}>
           <div className="pay-modal-content">
-            <button className="pink-button">Cash On Delivery</button>
+            <button
+              className="pink-button"
+              onClick={() => checkoutHandler(true)}
+            >
+             {
+              loading ? "Processing...." : "Cash On Delivery"
+             } 
+            </button>
             <button
               className="purple-button"
               onClick={() => checkoutHandler(false)}

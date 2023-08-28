@@ -2,6 +2,7 @@ import mongoose, { Document } from "mongoose";
 import { UserDocument } from "./user";
 
 export interface IOrder{
+  _id:string | mongoose.ObjectId;
     orderId?: string; // Note: You have orderId as optional in the schema
     userId: string | mongoose.Types.ObjectId | UserDocument;
     address: {

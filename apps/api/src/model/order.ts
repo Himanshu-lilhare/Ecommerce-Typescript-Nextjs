@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 import { string } from "zod";
 
 const orderSchema = new mongoose.Schema<IOrder>({
-orderId:{
-  type:String
-},
+  orderId: {
+    type: String,
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
@@ -18,7 +18,6 @@ orderId:{
     phone: String,
     zipcode: String,
     country: String,
-   
   },
   orderItems: [
     {
@@ -30,9 +29,8 @@ orderId:{
     },
   ],
   paymentInfo: {
-    id: {
+    paymentId: {
       type: String,
-    
     },
     status: {
       type: String,
@@ -53,8 +51,9 @@ orderId:{
   },
 
   createdAt: {
-    type: Date,
-    default: Date.now(),
+
+      type:Date,
+      default:Date.now()
   },
 });
 

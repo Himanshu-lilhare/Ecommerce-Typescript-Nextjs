@@ -53,7 +53,9 @@ function AllOrders() {
       try {
         setLoading(true);
         const { data } = await axios.get(`${serverLink}/getOrders`, {
+       
           withCredentials: true,
+          
         });
 
         setOrders(data.orders);
@@ -107,16 +109,16 @@ function Order({ order }: { order: IOrder }) {
         <div className="profile-single-order">
           <h3 className="profile-order-date pdd">
             Order-Date: {tarik} {months[month]} {daysOfWeek[weekDay]}{" "}
-            {date.getFullYear()}{" "}
+            {date.getFullYear()}{" "}{date.getHours()}{":"}{date.getUTCMinutes()}
           </h3>
         </div>
         <div className="profile-single-order ">
-          <h3 className="profile-orderid pdd">Order-Id : {order.orderId}</h3>
+          <h3 className="profile-orderid pdd">Order-Id : {order.orderId ? order.orderId : order._id.toString()}</h3>
         </div>
         <div className="profile-single-order">
           <h3 className="profile-order-status pdd">
-            Order-Status:{" "}
-            <span style={{ color: "green" }}>{order.orderStatus}</span>
+            Payment-Status:{" "}
+            <span style={{ color: "green" }}>{order.paymentInfo.status}</span>
           </h3>
         </div>
       </Link>

@@ -1,12 +1,9 @@
-import { NextRequest } from "next/server";
-
+import { NextRequest} from "next/server";
+import cors from "cors"
+import next from "next/types";
 
 export function middleware(req:NextRequest){
-console.log("aaya")
-
 
 }
 
-export const config = {
-    matcher : '/'
-}
+export const config={matcher:['/profile']}
