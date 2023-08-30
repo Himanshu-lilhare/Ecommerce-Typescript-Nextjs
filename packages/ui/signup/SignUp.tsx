@@ -67,8 +67,8 @@ export const SignUp = () => {
             {...form.register("name", {
               required: "Name is Required",
               minLength: {
-                value: 3,
-                message: "Minimun 3 Characters Required",
+                value: 4,
+                message: "Minimun 4 Characters Required",
               },
             })}
           />
@@ -109,8 +109,8 @@ export const SignUp = () => {
                   "Password Must Contain Special Character , Number and Uppercase Letter",
               },
               minLength: {
-                value: 7,
-                message: "Min Length is 7 Required",
+                value: 8,
+                message: "Min Length is 8 Required",
               },
             })}
           />

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { cartAtom, userAtom } from "store";
@@ -7,7 +7,8 @@ import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { serverLink } from "../ServerLink";
 import { getCart } from "../apiCalls/cart/getCart";
-import "./login.css"
+import "./login.css";
+import { toast } from "react-hot-toast";
 
 type LoginForm = {
   email: string;
@@ -16,7 +17,7 @@ type LoginForm = {
 
 export const Login = () => {
   const setUser = useSetRecoilState(userAtom);
-  const setCart = useSetRecoilState(cartAtom)
+  const setCart = useSetRecoilState(cartAtom);
   const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<LoginForm>();
   const router = useRouter();
@@ -49,24 +50,33 @@ export const Login = () => {
       setLoading(false);
       setUser({ isAuthenticated: true, user: res?.data?.user });
       router.push("/");
-      const cartData = await getCart()
-      
-      if(cartData.userCart.length > 0) {
+      const cartData = await getCart();
+
+      if (cartData.userCart.length > 0) {
         setCart(cartData.userCart);
       }
-
- 
     } catch (error) {
       console.log("error");
       setLoading(false);
     }
   }
+  useEffect(() => {
+    if (window.location.href.split("?")[1]) {
+      toast.error("You Are Not LoggedIn");
+    }
+  }, []);
 
   return (
     <>
-      <form className="login-signin-form" onSubmit={handleSubmit(logIn)} noValidate>
+      <form
+        className="login-signin-form"
+        onSubmit={handleSubmit(logIn)}
+        noValidate
+      >
         <div>
-          <label className="login-signin-labels"  htmlFor="email">E-mail</label>
+          <label className="login-signin-labels" htmlFor="email">
+            E-mail
+          </label>
           <input
             required
             type="mail"
@@ -82,7 +92,9 @@ export const Login = () => {
           <p className="login-signin-fields-error">{errors.email?.message}</p>
         </div>
         <div>
-          <label  className="login-signin-labels" htmlFor="password">Password</label>
+          <label className="login-signin-labels" htmlFor="password">
+            Password
+          </label>
           <input
             required
             type="password"
@@ -101,7 +113,9 @@ export const Login = () => {
               },
             })}
           />
-          <p className="login-signin-fields-error">{errors.password?.message}</p>
+          <p className="login-signin-fields-error">
+            {errors.password?.message}
+          </p>
         </div>
         <button type="submit"> {loading ? "Loading...." : "LogIn"}</button>
       </form>

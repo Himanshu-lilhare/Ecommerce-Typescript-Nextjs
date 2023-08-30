@@ -17,6 +17,8 @@ export function CheckoutFooter() {
   const user = useRecoilValue(userAtom);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [onlinepayLoading, setOnlinepayLoading] = useState<boolean>(false);
+
   const router = useRouter();
   async function checkoutHandler(isOnCash: boolean) {
     if (!address) {
@@ -28,6 +30,8 @@ export function CheckoutFooter() {
     try {
       if (isOnCash) {
         setLoading(true);
+      } else {
+        setOnlinepayLoading(true);
       }
 
       const { data } = await axios.post(
@@ -48,7 +52,7 @@ export function CheckoutFooter() {
       if (isOnCash && data.success) {
         setCartItems([]);
         setLoading(false);
-        toast.success('Ordered Successfully')
+        toast.success("Ordered Successfully");
         return router.push("/profile");
       }
       console.log(data);
@@ -86,7 +90,7 @@ export function CheckoutFooter() {
         data?.order?.id + " ab open hua "
       );
       const paymentObject = new (window as any).Razorpay(options);
-
+      setOnlinepayLoading(false);
       paymentObject.open();
     } catch (error) {}
   }
@@ -116,15 +120,13 @@ export function CheckoutFooter() {
               className="pink-button"
               onClick={() => checkoutHandler(true)}
             >
-             {
-              loading ? "Processing...." : "Cash On Delivery"
-             } 
+              {loading ? "Processing...." : "Cash On Delivery"}
             </button>
             <button
               className="purple-button"
               onClick={() => checkoutHandler(false)}
             >
-              Pay Online
+              {onlinepayLoading ? "Processing..." : " Pay Online"}
             </button>
           </div>
         </PayModal>

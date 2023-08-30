@@ -139,16 +139,27 @@ var productSchema = new import_mongoose2.default.Schema({
 var product = import_mongoose2.default.models.product || import_mongoose2.default.model("product", productSchema);
 
 // src/controller/product.ts
-var getAllProducts = tryCatchWrapper(async (req, res, next) => {
-  let products = await product.find({});
-  res.status(200).json({ products });
-});
-var getSingleProduct = tryCatchWrapper(async (req, res, next) => {
-  let products = await product.findById(req.params.id);
-  if (!products)
-    return next(new CustomError("Product Doesnt Exist", 400));
-  res.status(200).json({ product: products });
-});
+var getAllProducts = tryCatchWrapper(
+  async (req, res, next) => {
+    let responsePerPage = 3;
+    let pageNumber = req.query.page;
+    if (!pageNumber) {
+      pageNumber = 1;
+    }
+    let products = await product.find({}).skip((pageNumber - 1) * 3).limit(3);
+    let numberOfProducts = await product.countDocuments();
+    let numberofPaginationButton = Math.ceil(numberOfProducts / responsePerPage);
+    res.status(200).json({ products, numberofPaginationButton });
+  }
+);
+var getSingleProduct = tryCatchWrapper(
+  async (req, res, next) => {
+    let products = await product.findById(req.params.id);
+    if (!products)
+      return next(new CustomError("Product Doesnt Exist", 400));
+    res.status(200).json({ product: products });
+  }
+);
 
 // src/routes/product.ts
 var productRouter = import_express.default.Router();
@@ -321,7 +332,7 @@ var singleupload = (0, import_multer.default)({ storage }).any();
 
 // src/routes/admin.ts
 var adminRouter = import_express2.default.Router();
-adminRouter.route("/createProduct").post(AuthenticateUser, singleupload, createproduct);
+adminRouter.route("/createProduct").post(singleupload, createproduct);
 adminRouter.route("/deleteProducts").delete(AuthenticateUser, deleteProducts);
 var admin_default = adminRouter;
 

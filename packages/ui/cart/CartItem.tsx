@@ -9,26 +9,11 @@ import useDebounce from "../hooks/useDebounce";
 import { useState } from "react";
 import Image from "next/image";
 const CartItem = ({ cartItem }: { cartItem: CartItems }) => {
-  if (!cartItem.qty) return <></>;
-  const setCartItems = useSetRecoilState(cartAtom);
-  const debounceQty = useDebounce(cartItem.qty, 500);
-  const [blocker, setBlocker] = useState(0);
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    if (!e.target.value) {
-      console.log("yaha aaya delete karne");
-      return deleteHandler();
-    }
-    setCartItems((prev) => {
-      let newCartItems = prev.map((item, index) => {
-        if (item._id === cartItem._id) {
-          return { ...item, qty: parseInt(e.target.value) };
-        }
-        return item;
-      });
-      return newCartItems;
-    });
-  }
+  const setCartItems = useSetRecoilState(cartAtom);
+  const debounceQty = useDebounce(cartItem.qty!, 500);
+  const [blocker, setBlocker] = useState(0);
+  
   useEffect(() => {
     setBlocker(blocker + 2);
     async function setCart() {
@@ -51,6 +36,22 @@ const CartItem = ({ cartItem }: { cartItem: CartItems }) => {
       setCart();
     }
   }, [debounceQty]);
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    if (!e.target.value) {
+      console.log("yaha aaya delete karne");
+      return deleteHandler();
+    }
+    setCartItems((prev) => {
+      let newCartItems = prev.map((item, index) => {
+        if (item._id === cartItem._id) {
+          return { ...item, qty: parseInt(e.target.value) };
+        }
+        return item;
+      });
+      return newCartItems;
+    });
+  }
+
 
   async function deleteHandler() {
     setCartItems((prev) => {
@@ -67,6 +68,7 @@ const CartItem = ({ cartItem }: { cartItem: CartItems }) => {
       }
     );
   }
+  if (!cartItem.qty) return <></>;
   return (
     <div className="cart-product">
       <div className="cart-product-image-name-and-input">
@@ -95,7 +97,7 @@ const CartItem = ({ cartItem }: { cartItem: CartItems }) => {
 
       <div></div>
       <div className="cart-product-price-and-delete">
-        <p style={{fontSize:"1.5rem",fontWeight:'600'}}> Price : {cartItem?.oneProduct?.price}</p>
+        <p style={{fontSize:"1.5rem",fontWeight:'600'}}> Price : {cartItem?.oneProduct?.price} * {cartItem?.qty} </p>
 
         <button  onClick={deleteHandler} className="cart-product-delete-button purple-button">Delete</button>
       </div>

@@ -109,7 +109,7 @@ function Order({ order }: { order: IOrder }) {
         <div className="profile-single-order">
           <h3 className="profile-order-date pdd">
             Order-Date: {tarik} {months[month]} {daysOfWeek[weekDay]}{" "}
-            {date.getFullYear()}{" "}{date.getHours()}{":"}{date.getUTCMinutes()}
+            {date.getFullYear()}
           </h3>
         </div>
         <div className="profile-single-order ">

@@ -15,7 +15,7 @@ const user = useRecoilValue(userAtom)
 const router = useRouter()
 const [loading,setLoading] = useState<boolean>(false)
 async function addToCart(){
-if(!user.isAuthenticated) return router.push("/login")
+if(!user.isAuthenticated) return router.push("/login?notloggedin=true")
 try {
   setLoading(true)
 const {data} = await axios.post(`${serverLink}/addToCart`,{
