@@ -1,5 +1,53 @@
+"use client";
 
-import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+
+import { useState, useEffect } from "react";
+
+const PaginationBar = (props: any) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pagenumber = searchParams.get("page")
+    ? parseInt(searchParams.get("page")!)
+    : 1;
+
+  const { numberofButton } = props;
+
+  const [selectedPage, setSelectedPage] = useState(pagenumber);
+
+
+  useEffect(() => {
+    setSelectedPage(pagenumber);
+  }, [pagenumber]);
+
+  // Function to determine the classname using memoization.
+  const getClassName = (index: number) => {
+    if (selectedPage === index + 1) {
+      return "purple-button";
+    }
+    return "white-button";
+  };
+function handleRouter(page:number){
+console.log('aaya')
+router.push(`/shop?page=${page}`)
+
+}
+  return (
+    <div className="pagination-bar">
+      {Array.from({ length: numberofButton }).map((_, index) => (
+        <button
+          onClick={()=>handleRouter(index+1)}
+          className={`light-border ${getClassName(index)}`}
+          key={index}
+        >
+          {index + 1}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+export default PaginationBar;
 
 // const PaginationBar = (props: any) => {
 //   let arrayof = [];
@@ -37,64 +85,21 @@ import Link from "next/link";
 
 // after code
 
-const PaginationBar = (props: any) => {
-  const { searchParams, numberofButton } = props;
+// const PaginationBar = (props: any) => {
+//   const { searchParams ,  numberofButton } = props;
 
-  // Function to determine the classname
-  const getClassName = (index: number) => {
-    if (!searchParams.page) {
-      return index + 1 === 1 ? "purple-button" : "white-button";
-    }
-    return searchParams.page.toString() === (index + 1).toString()
-      ? "purple-button"
-      : "white-button";
-  };
-
-  return (
-    <div className="pagination-bar ">
-      {Array.from({ length: numberofButton }).map((_, index) => (
-        <Link
-          href={`/shop?page=${index + 1}`}
-          className={`light-border ${getClassName(index)}`}
-          key={index}
-        >
-          {index + 1}
-        </Link>
-      ))}
-    </div>
-  );
-};
-
-export default PaginationBar;
-
-
-
-// import Link from "next/link";
-// import { useState, useEffect } from "react";
-
-// const PaginationBar = (props:any) => {
-//   const { searchParams, numberofButton } = props;
-
-//   // Initialize selected page with the value from searchParams, or 1 if not provided.
-//   const [selectedPage, setSelectedPage] = useState(
-//     searchParams.page ? parseInt(searchParams.page) : 1
-//   );
-
-//   // Update selectedPage when searchParams.page changes.
-//   useEffect(() => {
-//     setSelectedPage(searchParams.page ? parseInt(searchParams.page) : 1);
-//   }, [searchParams.page]);
-
-//   // Function to determine the classname using memoization.
-//   const getClassName = (index:number) => {
-//     if (selectedPage === index + 1) {
-//       return "purple-button";
+//   // Function to determine the classname
+//   const getClassName = (index: number) => {
+//     if (!searchParams.page) {
+//       return index + 1 === 1 ? "purple-button" : "white-button";
 //     }
-//     return "white-button";
+//     return searchParams.page.toString() === (index + 1).toString()
+//       ? "purple-button"
+//       : "white-button";
 //   };
 
 //   return (
-//     <div className="pagination-bar">
+//     <div className="pagination-bar ">
 //       {Array.from({ length: numberofButton }).map((_, index) => (
 //         <Link
 //           href={`/shop?page=${index + 1}`}

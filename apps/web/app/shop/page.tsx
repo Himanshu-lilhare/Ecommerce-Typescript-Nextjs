@@ -1,7 +1,9 @@
+
 import React from "react";
 import { AllProducts, serverLink } from "ui";
 import { cookies } from "next/headers";
 import axios from "axios";
+
 
 async function getAllProducts(searchParams: any) {
   let page = searchParams.page || 1;
@@ -23,8 +25,9 @@ async function getAllProducts(searchParams: any) {
 }
 
 const Shop = async ({ searchParams }: any) => {
-  const { products, numberofPaginationButton }: any =
-    getAllProducts(searchParams);
+  const { products, numberofPaginationButton }: any = await getAllProducts(
+    searchParams
+  );
 
   return (
     <main className="pad" style={{ minHeight: "100vh" }}>
@@ -34,6 +37,7 @@ const Shop = async ({ searchParams }: any) => {
         numberofPaginationButton={numberofPaginationButton}
         searchParams={searchParams}
       />
+
     </main>
   );
 };
