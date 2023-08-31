@@ -55,8 +55,8 @@ const CartItem = ({ cartItem }: { cartItem: CartItems }) => {
 
   async function deleteHandler() {
     setCartItems((prev) => {
-      let newCartItems = prev.filter((item) => {
-        return item._id !== cartItem._id;
+      let newCartItems = prev.filter((item:CartItems) => {
+        return item._id && item._id !== cartItem?._id;
       });
       return newCartItems;
     });

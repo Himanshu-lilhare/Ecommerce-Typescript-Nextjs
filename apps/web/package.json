@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
     "@types/recoil": "^0.0.9",
+    "axios": "^1.5.0",
     "common": "*",
     "cors": "^2.8.5",
     "next": "^13.4.1",
