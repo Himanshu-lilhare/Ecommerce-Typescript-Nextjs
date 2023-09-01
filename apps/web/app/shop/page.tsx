@@ -6,9 +6,22 @@ import axios from "axios";
 
 
 async function getAllProducts(searchParams: any) {
-  let page = searchParams.page || 1;
+  let page = searchParams.page || 1
+  let covertThis = {
+    page: searchParams.page || 1 ,
+    category : searchParams.category,
+    price : searchParams.price
+
+  }   
+
+  let searchParam = new URLSearchParams()
+  for(let key in covertThis ){
+     searchParam.set(key,covertThis[key])
+  }
+
+
   try {
-    let { data } = await axios.get(`${serverLink}/getProducts?page=${page}`, {
+    let { data } = await axios.get(`${serverLink}/getProducts?${searchParam.toString()}`, {
       headers: {
         Authorization: `${cookies().get("fit_wear_token")?.value}`,
       },
@@ -24,8 +37,8 @@ async function getAllProducts(searchParams: any) {
   }
 }
 
-const Shop = async ({ searchParams }: any) => {
-  const { products, numberofPaginationButton }: any = await getAllProducts(
+const Shop = async({ searchParams }: any) => {
+  const { products , numberofPaginationButton }: any = await getAllProducts(
     searchParams
   );
 

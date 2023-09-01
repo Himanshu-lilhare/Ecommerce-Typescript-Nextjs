@@ -57,6 +57,24 @@
 }
 
 
+/* Filter bar css 
+******************
+*****************************/
+
+.filter-bar{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+#category option[value="filter-by-category"] {
+  display: none;
+}
+#price option[value="filter-by-price"] {
+  display: none;
+}
+
+
 
 @media (max-width: 750px) {
 }

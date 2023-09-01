@@ -1,6 +1,7 @@
 import Product from "./Product";
 import "./shop.css";
 import PaginationBar from "./PaginationBar";
+import FilterBar from "./FilterBar";
 
 export const AllProducts = ({
   searchParams,
@@ -9,6 +10,7 @@ export const AllProducts = ({
 }: any) => {
   return (
     <div>
+      <FilterBar/>
       <main className="products-div">
         {products ? (
           products.map((product: any, index: number) => {

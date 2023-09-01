@@ -6,37 +6,32 @@ import { useState, useEffect } from "react";
 
 const PaginationBar = (props: any) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const pagenumber = searchParams.get("page")
-    ? parseInt(searchParams.get("page")!)
-    : 1;
 
   const { numberofButton } = props;
 
+  let searchParam = new URLSearchParams(window.location.search);
+  let pagenumber = searchParam.get("page")
+    ? parseInt(searchParam.get("page")!)
+    : 1;
   const [selectedPage, setSelectedPage] = useState(pagenumber);
-
-
-  useEffect(() => {
-    setSelectedPage(pagenumber);
-  }, [pagenumber]);
-
-  // Function to determine the classname using memoization.
+ 
   const getClassName = (index: number) => {
     if (selectedPage === index + 1) {
       return "purple-button";
     }
     return "white-button";
   };
-function handleRouter(page:number){
-console.log('aaya')
-router.push(`/shop?page=${page}`)
 
-}
+  function handleRouter(page: number) {
+    searchParam.set("page", page.toString());
+    setSelectedPage(page);
+    router.push(`/shop?${searchParam.toString()}`);
+  }
   return (
     <div className="pagination-bar">
       {Array.from({ length: numberofButton }).map((_, index) => (
         <button
-          onClick={()=>handleRouter(index+1)}
+          onClick={() => handleRouter(index + 1)}
           className={`light-border ${getClassName(index)}`}
           key={index}
         >
