@@ -1,32 +1,31 @@
-
 import React from "react";
 import { AllProducts, serverLink } from "ui";
 import { cookies } from "next/headers";
 import axios from "axios";
 
-
 async function getAllProducts(searchParams: any) {
-  let page = searchParams.page || 1
+  // let page = searchParams.page || 1;
   let covertThis = {
-    page: searchParams.page || 1 ,
-    category : searchParams.category,
-    price : searchParams.price
+    page: searchParams.page || 1,
+    category: searchParams.category || "",
+    price: searchParams.price || "",
+  };
 
-  }   
-
-  let searchParam = new URLSearchParams()
-  for(let key in covertThis ){
-     searchParam.set(key,covertThis[key])
+  let searchParam = new URLSearchParams();
+  for (let key in covertThis) {
+    searchParam.set(key, covertThis[key]);
   }
 
-
   try {
-    let { data } = await axios.get(`${serverLink}/getProducts?${searchParam.toString()}`, {
-      headers: {
-        Authorization: `${cookies().get("fit_wear_token")?.value}`,
-      },
-      withCredentials: true,
-    });
+    let { data } = await axios.get(
+      `${serverLink}/getProducts?${searchParam.toString()}`,
+      {
+        headers: {
+          Authorization: `${cookies().get("fit_wear_token")?.value}`,
+        },
+        withCredentials: true,
+      }
+    );
 
     return {
       products: data?.products,
@@ -37,8 +36,8 @@ async function getAllProducts(searchParams: any) {
   }
 }
 
-const Shop = async({ searchParams }: any) => {
-  const { products , numberofPaginationButton }: any = await getAllProducts(
+const Shop = async ({ searchParams }: any) => {
+  const { products, numberofPaginationButton }: any = await getAllProducts(
     searchParams
   );
 
@@ -50,7 +49,6 @@ const Shop = async({ searchParams }: any) => {
         numberofPaginationButton={numberofPaginationButton}
         searchParams={searchParams}
       />
-
     </main>
   );
 };

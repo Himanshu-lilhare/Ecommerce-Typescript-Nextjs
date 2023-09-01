@@ -142,13 +142,33 @@ var product = import_mongoose2.default.models.product || import_mongoose2.defaul
 var getAllProducts = tryCatchWrapper(
   async (req, res, next) => {
     let responsePerPage = 3;
-    let pageNumber = req.query.page;
-    if (!pageNumber) {
-      pageNumber = 1;
+    let page = req.query.page;
+    let category = req.query.category || "";
+    let price = req.query.price || "";
+    console.log(price, category + " price and category");
+    if (!page) {
+      page = 1;
     }
-    let products = await product.find({}).skip((pageNumber - 1) * 3).limit(3);
-    let numberOfProducts = await product.countDocuments();
-    let numberofPaginationButton = Math.ceil(numberOfProducts / responsePerPage);
+    page = parseInt(page);
+    let query = {};
+    if (category) {
+      query.category = category;
+    }
+    if (price) {
+      let [min, max] = price.split(/-|</).map((number) => {
+        return parseInt(number);
+      });
+      if (!isNaN(min)) {
+        query.price = { $gte: min, $lte: max };
+      } else {
+        query.price = { $gte: max };
+      }
+    }
+    let products = await product.find(query).skip((page - 1) * 3).limit(responsePerPage);
+    let numberOfProducts = await product.countDocuments(query) || products.length;
+    let numberofPaginationButton = Math.ceil(
+      numberOfProducts / responsePerPage
+    );
     res.status(200).json({ products, numberofPaginationButton });
   }
 );

@@ -12,7 +12,7 @@ export const AllProducts = ({
     <div>
       <FilterBar/>
       <main className="products-div">
-        {products ? (
+        {products.length > 0 ? (
           products.map((product: any, index: number) => {
             return <Product key={index} product={product} />;
           })

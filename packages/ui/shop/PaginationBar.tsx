@@ -6,15 +6,11 @@ import { useState, useEffect } from "react";
 
 const PaginationBar = (props: any) => {
   const router = useRouter();
-
+  const [selectedPage, setSelectedPage] = useState(
+    props.searchParams.page ? parseInt(props.searchParams.page) : 1
+  );
   const { numberofButton } = props;
 
-  let searchParam = new URLSearchParams(window.location.search);
-  let pagenumber = searchParam.get("page")
-    ? parseInt(searchParam.get("page")!)
-    : 1;
-  const [selectedPage, setSelectedPage] = useState(pagenumber);
- 
   const getClassName = (index: number) => {
     if (selectedPage === index + 1) {
       return "purple-button";
@@ -23,6 +19,8 @@ const PaginationBar = (props: any) => {
   };
 
   function handleRouter(page: number) {
+    let searchParam = new URLSearchParams(window.location.search);
+
     searchParam.set("page", page.toString());
     setSelectedPage(page);
     router.push(`/shop?${searchParam.toString()}`);

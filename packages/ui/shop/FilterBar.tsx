@@ -6,12 +6,14 @@ const FilterBar = () => {
   const router = useRouter();
   function handleFilter(e: ChangeEvent<HTMLSelectElement>) {
     let searchParam = new URLSearchParams(window.location.search);
-
-   searchParam.set(e.currentTarget.name,e.target.value)
+    if (searchParam.has("page")) {
+      searchParam.delete("page");
+    }
+    searchParam.set(e.currentTarget.name, e.target.value);
     router.push(`/shop?${searchParam.toString()}`);
   }
   return (
-    <div className="filter-bar">
+    <div className="filter-bar light-border">
       <select
         className="purple-button"
         name="category"
@@ -22,10 +24,10 @@ const FilterBar = () => {
         <option disabled className="white-button" value="filter-by-category">
           Sort by category
         </option>
-        <option className="white-button" value="allCategory">
+        <option className="white-button" value="">
           All
         </option>
-        <option className="white-button" value="t-shirt">
+        <option className="white-button" value="t-shirts">
           T-Shirt
         </option>
         <option className="white-button" value="jeans">
@@ -41,12 +43,12 @@ const FilterBar = () => {
         <option className="white-button" value="filter-by-price">
           Sort by price
         </option>
-        <option className="white-button" value="allPrice">
+        <option className="white-button" value="">
           All
         </option>
 
-        <option className="white-button" value="under-200">
-          0 - 200
+        <option className="white-button" value="1-200">
+          1 - 200
         </option>
         <option className="white-button" value="200-400">
           200 - 400
@@ -54,7 +56,7 @@ const FilterBar = () => {
         <option className="white-button" value="400-800">
           400 - 800
         </option>
-        <option className="white-button" value="over-800">
+        <option className="white-button" value="<800">
           over 800
         </option>
       </select>
