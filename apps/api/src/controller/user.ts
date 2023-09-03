@@ -1,16 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { tryCatchWrapper } from "../middleware/tryCatchWrapper";
-import {
-  registerUserBody,
-  addToCartBody,
-  deleteFromCartBody,
-  ProductType,
-} from "common";
+import { registerUserBody, addToCartBody } from "common";
 import { CustomError } from "../middleware/custumErrorClass";
 import { userModel } from "../model/user";
 import mongoose from "mongoose";
 import { product } from "../model/product";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
+
 import jwt from "jsonwebtoken";
 import { UserDocument } from "common";
 import { serialize } from "cookie";
@@ -79,7 +75,7 @@ export const addToCart = tryCatchWrapper(
 
     if (!isValid.success)
       return next(new CustomError(isValid.error.errors[0].message, 400));
- 
+
     let user = await userModel
       .findOne({
         _id: new mongoose.Types.ObjectId(req.user?._id.toString()),
@@ -106,18 +102,19 @@ export const addToCart = tryCatchWrapper(
           },
         }
       );
-      if (addedTOCart.modifiedCount === 1){
+      if (addedTOCart.modifiedCount === 1) {
         let user = await userModel
-        .findById(req.user?._id)
-        .populate("cart.oneProduct");
+          .findById(req.user?._id)
+          .populate("cart.oneProduct");
         return res
           .status(200)
           .json({ message: "Added To Cart", userCart: user.cart });
-      } 
+      }
     } else {
-      console.log(user.cart)
+      console.log(user.cart);
       const cartItemIndex: number = user.cart.findIndex(
-        (item: any) => item.oneProduct._id.toString() === req.body.productId.toString()
+        (item: any) =>
+          item.oneProduct._id.toString() === req.body.productId.toString()
       );
 
       if (cartItemIndex === -1) {

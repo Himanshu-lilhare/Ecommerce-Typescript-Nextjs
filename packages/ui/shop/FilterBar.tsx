@@ -22,7 +22,7 @@ const FilterBar = () => {
         onChange={handleFilter}
       >
         <option disabled className="white-button" value="filter-by-category">
-          Sort by category
+          Filter by category
         </option>
         <option className="white-button" value="">
           All
@@ -41,7 +41,7 @@ const FilterBar = () => {
         id="price"
       >
         <option className="white-button" value="filter-by-price">
-          Sort by price
+          Filter by price
         </option>
         <option className="white-button" value="">
           All
