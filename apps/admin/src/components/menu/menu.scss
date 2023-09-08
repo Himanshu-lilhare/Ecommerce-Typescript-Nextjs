@@ -1,0 +1,27 @@
+@import "../../styles/global.scss";
+.menu{
+height: 90vh;
+    .item{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+      .menu-link{
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.2s ease-in-out;
+        border-radius: 5px;
+        &:hover{
+            background-color: $bg-soft;
+        }
+        .menu-link-title{
+            font-size: 12px;
+            font-weight: 200;
+       
+        }
+      } 
+     
+    }
+}

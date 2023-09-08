@@ -1,0 +1,30 @@
+
+.boxes-box1{
+    h1{
+        margin-bottom: 20px;
+        font-size: 17px;
+        letter-spacing: 1px;
+    }
+    .list-item{
+     
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        .product{
+            display: flex;
+            gap: 20px;
+            align-items: center;
+          
+            .product-name{
+                font-size: 14px;
+                font-weight: 500;
+            }
+        }
+        .product-prce{
+            .amount{
+                font-weight: 500;
+            }
+        }
+    }
+}

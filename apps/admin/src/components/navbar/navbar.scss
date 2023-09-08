@@ -1,0 +1,31 @@
+.navbar {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .logo {
+    font-size: 13px;
+    letter-spacing: 2px;
+  }
+  .icons {
+    display: flex;
+    gap: 20px;
+    .search-icon {
+      display: flex;
+      align-items: center;
+    }
+    .admin-icons {
+      display: flex;
+      align-items: center;
+      img {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 10px;
+      }
+    }
+  }
+}
