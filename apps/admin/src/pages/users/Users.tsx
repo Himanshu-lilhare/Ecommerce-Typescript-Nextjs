@@ -1,21 +1,30 @@
-import { useState } from "react"
-import Table from "../../components/table/Table"
-import "./users.scss"
-import AddModal from "../../components/modal/AddModal"
+import { useState } from "react";
+import "./users.scss";
+import AddModal from "../../components/modal/AddModal";
+import Table from "../../components/Lists/Table";
+import { dummyUsers } from "../../data";
 const Users = () => {
-  const [open,setOpen] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(false);
+
+  let keys = [
+    "name",
+    "username",
+    "totalProductsBought",
+    "totalAmountSpent",
+    "role",
+  ];
   return (
-    <div>
+    <div className="users">
       <div className="info">
         <h1>Users</h1>
-        <button onClick={()=>setOpen(true)}>Add User</button>
+        <button onClick={() => setOpen(true)}>Add User</button>
       </div>
-      <Table/>
-      {
-        open && <AddModal slug='user' columns={[1,2,3,4]}  setOpen={setOpen}/>
-      }
+      <Table title="User" keys={keys} content={dummyUsers} />
+      {open && (
+        <AddModal slug="user" columns={[1, 2, 3, 4]} setOpen={setOpen} />
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Users
+export default Users;

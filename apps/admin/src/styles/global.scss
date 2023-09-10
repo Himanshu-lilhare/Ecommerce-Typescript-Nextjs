@@ -1,7 +1,7 @@
 @import "./variables.scss";
+@import "./responsive.scss";
 
-
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -10,21 +10,32 @@ a {
   text-decoration: none;
   color: inherit;
 }
-.layout-main{
+.layout-main {
   font-family: "Inter", sans-serif;
   background-color: $bg-main;
   color: $text-main;
-}
-.container{
-  display: flex;
-}
-.menu-container{
-  width: 250px;
-  padding: 5px 20px;
-  border-right:2px solid $bg-soft ;
-}
-.content-container{
-  padding: 5px 20px;
-  width: 100%;
-}
+  width: 100vw;
 
+}
+.container {
+  display: flex;
+  border: 1px solid rgb(255, 3, 16);
+  width: 100%;
+  .menu-container {
+    width: 200px;
+    padding: 5px 10px;
+    border-right: 2px solid $bg-soft;
+    border: 1px solid rgb(255, 255, 255);
+    display: flex;
+    justify-content: left;
+    @include lg {
+      width: 70px;
+      justify-content: center;
+    }
+  }
+  .content-container {
+    width: 100%;
+    padding: 5px 20px;
+    border: 1px solid rgb(255, 255, 0);
+  }
+}

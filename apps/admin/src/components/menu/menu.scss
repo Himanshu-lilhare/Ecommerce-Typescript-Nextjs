@@ -1,11 +1,17 @@
 @import "../../styles/global.scss";
+@import "../../styles/responsive.scss";
 .menu{
 height: 90vh;
+width: 100%;
+padding: 10px 0px;
     .item{
         display: flex;
         flex-direction: column;
         gap: 10px;
         margin-bottom: 20px;
+       .active{
+        background-color: $bg-soft;
+       }
       .menu-link{
         padding: 10px;
         display: flex;
@@ -13,12 +19,18 @@ height: 90vh;
         gap: 10px;
         transition: all 0.2s ease-in-out;
         border-radius: 5px;
+        
+      
         &:hover{
             background-color: $bg-soft;
         }
         .menu-link-title{
             font-size: 12px;
             font-weight: 200;
+
+            @include lg{
+              display: none;
+            }
        
         }
       } 

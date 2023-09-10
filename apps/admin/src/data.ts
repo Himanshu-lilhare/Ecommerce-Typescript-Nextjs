@@ -50,3 +50,79 @@ export const topDealUsers:any[] = [
       amount: "1.560",
     },
   ];
+
+  export const dummyUsers = [
+    {
+      name: 'John Doe',
+      username: 'johndoe123',
+      totalProductsBought: 45,
+      totalAmountSpent: 2345.67,
+      role: 'user',
+    },
+    {
+      name: 'Jane Smith',
+      username: 'janesmith456',
+      totalProductsBought: 32,
+      totalAmountSpent: 1234.56,
+      role: 'user',
+    },
+    {
+      name: 'David Johnson',
+      username: 'davidj82',
+      totalProductsBought: 58,
+      totalAmountSpent: 3789.12,
+      role: 'admin',
+    },
+    {
+      name: 'Emily Davis',
+      username: 'emilydavis789',
+      totalProductsBought: 22,
+      totalAmountSpent: 1112.34,
+      role: 'user',
+    },
+    {
+      name: 'Michael Brown',
+      username: 'mikebrown55',
+      totalProductsBought: 65,
+      totalAmountSpent: 4567.89,
+      role: 'user',
+    },
+    {
+      name: 'Sarah Wilson',
+      username: 'sarahw23',
+      totalProductsBought: 12,
+      totalAmountSpent: 678.90,
+      role: 'user',
+    },
+    {
+      name: 'Kevin Lee',
+      username: 'kevinl77',
+      totalProductsBought: 41,
+      totalAmountSpent: 2234.50,
+      role: 'user',
+    },
+    {
+      name: 'Jessica White',
+      username: 'jessicawhite12',
+      totalProductsBought: 53,
+      totalAmountSpent: 3456.78,
+      role: 'user',
+    },
+    {
+      name: 'Robert Taylor',
+      username: 'robtaylor33',
+      totalProductsBought: 19,
+      totalAmountSpent: 987.65,
+      role: 'user',
+    },
+    {
+      name: 'Amanda Moore',
+      username: 'amandam345',
+      totalProductsBought: 37,
+      totalAmountSpent: 1999.99,
+      role: 'user',
+    },
+   
+  ]  
+
+ 
