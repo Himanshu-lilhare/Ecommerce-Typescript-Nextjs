@@ -1,0 +1,34 @@
+@import "../../styles/variables.scss";
+@import "../../styles/responsive.scss";
+
+.table {
+width: inherit;
+background-color: white;
+color: black;
+  th,
+  td {
+    text-align: center;
+    padding: 10px;
+    transition: all 0.2s ease;
+    border-bottom: 0.5px solid $bg-soft;
+    &:hover{
+      background-color: $bg-soft;
+      color: white;
+    }
+  }
+
+  .edit-icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+    height: 20px;
+    &:hover{
+      cursor: pointer;
+      background-color: white;
+
+    }
+  }
+ 
+
+}
