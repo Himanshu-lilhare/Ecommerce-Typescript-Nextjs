@@ -1,33 +1,29 @@
 import { useState, Dispatch, SetStateAction } from "react";
 import "./table.scss";
+import { TUser } from "../../types/user";
+import { TProduct } from "../../types/product";
+import { TOrder } from "../../types/order";
+import { useEditUserInfoMutation } from "../../services/usersSlice";
 
-type TUser = {
-  name: string;
-  username: string;
-  productsBought: number;
-  amountSpent: number;
-  role: string;
-};
+type TContent = TUser | TProduct | TOrder;
 type TTable = {
   title: string;
   headings: string[];
-  content: TUser[];
+  content: TContent[];
 };
 const Table = (props: TTable) => {
-  const [content, setCOntent] = useState<TUser[]>(props.content);
-
   return (
     <table className="table">
       <thead>
         <tr className="head-row">
-          <th>Sr.No</th>
+          <th className="table-head">Sr.No</th>
           {props.headings.map((heading: string, index: number) => {
             return <th key={index}>{heading.toLocaleUpperCase()}</th>;
           })}
         </tr>
       </thead>
       <tbody className="table-body">
-        {content.map((info: TUser, index: number) => {
+        {props.content.map((info: TContent, index: number) => {
           return (
             <TableBodyRow
               info={info}
@@ -49,11 +45,11 @@ function TableBodyRow({
   index,
   headings,
 }: {
-  info: TUser;
+  info: TContent;
   index: number;
   headings: string[];
 }) {
-  const [row, setRow] = useState<TUser>(info);
+  const [row, setRow] = useState<TContent>(info);
 
   return (
     <>
@@ -83,18 +79,42 @@ function TableBoodyRowData({
 }: {
   heading: string;
   index: number;
-  row: TUser;
-  setRow: Dispatch<SetStateAction<TUser>>;
+  row: TContent;
+  setRow: Dispatch<SetStateAction<TContent>>;
 }) {
   const [edit, setEdit] = useState<boolean>(false);
-  let editableFields = "name,role";
+  const [value, setValue] = useState<string>((row as any)[heading]);
+  const [updateUser] = useEditUserInfoMutation();
+
+  let editableFields = "name,role,stock";
+
+  function doneEdit(keys: string) {
+    let updatedValue = { ...row, [keys]: value };
+    setRow(updatedValue);
+
+    updateUser(updatedValue);
+  }
   return (
     <td key={index}>
-      <span style={ editableFields.includes(heading)
+      <span
+        style={
+          editableFields.includes(heading)
             ? { display: "flex", justifyContent: "space-between" }
-            : {} } >
-        {(row as any)[heading]}{" "}
-        {GiveIcon(editableFields, heading, edit, setEdit)}
+            : {}
+        }
+      >
+        {edit ? (
+          <input
+            className="input"
+            type="text"
+            onChange={(e) => setValue(e.target.value)}
+            value={value}
+            autoFocus
+          />
+        ) : (
+          (row as any)[heading]
+        )}{" "}
+        {GiveIcon(editableFields, heading, edit, setEdit, doneEdit)}
       </span>
     </td>
   );
@@ -104,16 +124,9 @@ function GiveIcon(
   editableFields: string,
   heading: string,
   edit: boolean,
-  setEdit: Dispatch<SetStateAction<boolean>>
+  setEdit: Dispatch<SetStateAction<boolean>>,
+  doneEdit: (heading: string) => void
 ) {
-
-
-function doneEdit(){
-
-
-
-}
-
   if (editableFields.includes(heading) && edit) {
     return (
       <img
@@ -122,6 +135,7 @@ function doneEdit(){
         alt="edit"
         onClick={() => {
           setEdit(false);
+          doneEdit(heading);
         }}
       />
     );
@@ -133,10 +147,9 @@ function doneEdit(){
         src="edit.png"
         alt="edit"
         onClick={() => {
-            doneEdit()
+          setEdit(true);
         }}
       />
     );
   }
-
 }

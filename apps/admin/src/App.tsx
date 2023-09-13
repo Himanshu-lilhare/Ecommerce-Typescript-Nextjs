@@ -7,6 +7,7 @@ import Footer from "./components/footer/Footer";
 import Menu from "./components/menu/Menu";
 import Login from "./pages/login/Login";
 import "./styles/global.scss"
+import Orders from "./pages/orders/Orders";
 function App() {
   const Layout = () => {
     return (
@@ -41,6 +42,10 @@ function App() {
         {
           path: "products",
           element: <Products />,
+        },
+        {
+          path: "orders",
+          element: <Orders />,
         },
       ]
     },

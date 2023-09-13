@@ -29,20 +29,20 @@ app.use(
 
 app.use(json());
 app.use(cors({ origin: ['http://localhost:3000',
+"http://localhost:3002",
 'https://checkout.razorpay.com',
 'https://*.razorpay.com'
 ], credentials: true }));
+// app.use(cors())
 app.use(cookieParser())
 app.use(productRouter)
 app.use(userRouter)
-app.use(adminRouter)
+app.use("/admin",adminRouter)
 app.use(orderRouter)
 app.get("/message/:name", (req, res) => {
   return res.json({ message: `hello ${req.params.name}` });
 });
-app.get("/healthz", (req, res) => {
-  return res.json({ ok: true });
-});
+
 app.use(CustomErrorHandler)
 connectDb()  
 cloudinary.v2.config({

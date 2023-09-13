@@ -2,33 +2,45 @@
 @import "../../styles/responsive.scss";
 
 .table {
-width: inherit;
-background-color: white;
-color: black;
+  width: inherit;
+  background-color: white;
+  color: black;
+
   th,
   td {
     text-align: center;
+    
     padding: 10px;
     transition: all 0.2s ease;
     border-bottom: 0.5px solid $bg-soft;
-    &:hover{
+    &:hover {
       background-color: $bg-soft;
       color: white;
     }
+    &:hover .input {
+      background-color: $bg-soft;
+      color: white;
+      transition: all 0.2s ease;
+      border: 0.2px solid rgba(255, 255, 255, 0.37);
+    }
   }
-
-  .edit-icon{
+  .input {
+    width: 120px;
+    padding: 5px;
+    font-size: 14px;
+    outline: none;
+    border: 0.2px solid rgba(0, 0, 0, 0.251);
+    border-radius: 10px;
+  }
+  .edit-icon {
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease-in-out;
     height: 20px;
-    &:hover{
+    &:hover {
       cursor: pointer;
       background-color: white;
-
     }
   }
- 
-
 }
