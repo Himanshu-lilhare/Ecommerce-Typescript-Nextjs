@@ -3,7 +3,7 @@ import "./table.scss";
 import { TUser } from "../../types/user";
 import { TProduct } from "../../types/product";
 import { TOrder } from "../../types/order";
-import { useEditUserInfoMutation } from "../../services/usersSlice";
+import { useEditUserInfoMutation } from "../../services/usersApi";
 
 type TContent = TUser | TProduct | TOrder;
 type TTable = {
@@ -30,6 +30,7 @@ const Table = (props: TTable) => {
               index={index}
               key={index}
               headings={props.headings}
+              title={props.title}
             />
           );
         })}
@@ -44,10 +45,12 @@ function TableBodyRow({
   info,
   index,
   headings,
+  title
 }: {
   info: TContent;
   index: number;
   headings: string[];
+  title:string
 }) {
   const [row, setRow] = useState<TContent>(info);
 
@@ -63,6 +66,7 @@ function TableBodyRow({
               key={index}
               heading={heading}
               index={index}
+              title={title}
             />
           );
         })}
@@ -76,11 +80,13 @@ function TableBoodyRowData({
   index,
   row,
   setRow,
+  title
 }: {
   heading: string;
   index: number;
   row: TContent;
   setRow: Dispatch<SetStateAction<TContent>>;
+  title:string
 }) {
   const [edit, setEdit] = useState<boolean>(false);
   const [value, setValue] = useState<string>((row as any)[heading]);
@@ -91,8 +97,18 @@ function TableBoodyRowData({
   function doneEdit(keys: string) {
     let updatedValue = { ...row, [keys]: value };
     setRow(updatedValue);
+    
+    if(title==="Users"){
+      updateUser(updatedValue);
+    }
+    if(title==="Products"){
+      updateUser(updatedValue);
+    }
+    if(title==="Ordeers"){
 
-    updateUser(updatedValue);
+    }
+
+    
   }
   return (
     <td key={index}>

@@ -8,6 +8,9 @@ import getdatauri from "../middleware/dataUri";
 import cloudinary, { UploadApiResponse } from "cloudinary";
 import { userModel } from "../model/user";
 import { orderModel } from "../model/order";
+import { ITop3Products, StatDocument, statsModel } from "../model/stats";
+import { getTop3ProductsSold } from "../dbQueries/queries";
+import { stat } from "fs";
 
 // User controller ..................//
 
@@ -49,7 +52,7 @@ export const getAllUsers = tryCatchWrapper(
 
 export const editUserInfo = tryCatchWrapper(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { name, role, _id:id } = req.body;
+    const { name, role, _id: id } = req.body;
     if (!name && !role && !id) {
       return next(new CustomError("Please Provide which field to Delete", 400));
     }
@@ -150,9 +153,13 @@ export const editProductInfo = tryCatchWrapper(
       updateProduct.stock = parseInt(stock);
     }
 
-    const updatedProduct = await userModel.findByIdAndUpdate(id, updateProduct, {
-      new: true,
-    });
+    const updatedProduct = await userModel.findByIdAndUpdate(
+      id,
+      updateProduct,
+      {
+        new: true,
+      }
+    );
 
     res.json({ user: updatedProduct });
   }
@@ -215,5 +222,53 @@ export const getAllOrdersAdmin = tryCatchWrapper(
     ]);
 
     res.json(orders);
+  }
+);
+
+// get Stats /////////////////////////////
+//////////////////////////////////////////
+
+async function sendAndGiveMeStats(
+  res: Response
+): Promise<Pick<StatDocument, "orderStats" | "top3Products" | "userStats">> {
+  let top3Products = await getTop3ProductsSold();
+  console.log(top3Products);
+  let userStats = {
+    totalUsers: await userModel.countDocuments(),
+    increaseInUsers: "100%",
+  };
+  let orderStats = {
+    totalOrders: await orderModel.countDocuments(),
+    increaseInOrders: "100%",
+  };
+
+  return {
+    top3Products: top3Products.map((item): ITop3Products => {
+      return {
+        product: item._id,
+        totalSold: item.totalSold,
+      };
+    }),
+    userStats,
+    orderStats,
+  };
+}
+
+export const getStats = tryCatchWrapper(
+  async (req: Request, res: Response, next: NextFunction) => {
+    let count = await statsModel.countDocuments();
+
+    if (count === 0) {
+      let createStats = await sendAndGiveMeStats(res);
+      await statsModel.create(createStats);
+    }
+
+    let stats = await statsModel
+      .find({})
+      .sort({ _id: -1 })
+      .limit(1)
+      .populate("top3Products.product");
+
+    res.json(stats);
   }
 );

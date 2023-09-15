@@ -1,6 +1,7 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import "./addmodal.scss";
+import { handleScroll } from "../../helpers/handleScroll";
 type Props = {
   slug: string;
   columns: number[];
@@ -18,10 +19,16 @@ const AddModal = (props: Props) => {
   function submitForm(data: signupform) {
     console.log(data);
   }
+
+ 
+
   return (
     <div className="add-modal">
       <div className="modal">
-        <span className="close" onClick={() => props.setOpen(false)}>
+        <span className="close" onClick={() =>{
+props.setOpen(false)
+handleScroll()
+        } }>
           x
         </span>
         <h2>Add New {props.slug}</h2>
@@ -42,7 +49,7 @@ const AddModal = (props: Props) => {
             <p>{formState.errors?.email?.message}</p>
           </div>
           <div className="item">
-          <label htmlFor="name">Name</label>
+            <label htmlFor="name">Name</label>
             <input
               type="name"
               placeholder="name"
@@ -57,7 +64,7 @@ const AddModal = (props: Props) => {
             <p>{formState.errors?.name?.message}</p>
           </div>
           <div className="item">
-          <label htmlFor="password">Password</label>
+            <label htmlFor="password">Password</label>
             <input
               type="password"
               placeholder="password"
