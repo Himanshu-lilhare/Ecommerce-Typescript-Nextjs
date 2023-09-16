@@ -268,7 +268,7 @@ export const getStats = tryCatchWrapper(
       .sort({ _id: -1 })
       .limit(1)
       .populate("top3Products.product");
-
-    res.json(stats);
+ 
+   return res.json(stats[0]);
   }
 );

@@ -1,6 +1,7 @@
 import { ResponsiveContainer, LineChart, Line, Tooltip } from "recharts";
 import "./chartbox.scss";
 import { Link } from "react-router-dom";
+import { OrderStat, UserStat } from "../../../types/stats";
 const data = [
   {
     name: "Page A",
@@ -45,20 +46,34 @@ const data = [
     amt: 2100,
   },
 ];
-const Chartbox = () => {
+const Chartbox = ({
+  userStats,
+  title,
+  orderStats,
+}: {
+  userStats?: UserStat;
+  title: "Orders" | "Users";
+  orderStats?: OrderStat;
+}) => {
   return (
     <div className="chartbox">
       <div className="chart-info">
-        <span>Total Users</span>
-        <h2>12345</h2>
+        <span>Total {title}</span>
+        <h2>
+          {userStats && userStats.totalUsers}
+          {orderStats && orderStats.totalOrders}
+        </h2>
 
-        <Link to={"users"}>All USers</Link>
+        <Link to={"users"}>{title}</Link>
       </div>
       <div className="chart-chart">
         <div className="chart">
           <ResponsiveContainer width="100%" height="50%">
             <LineChart data={data}>
-              <Tooltip contentStyle={{background:"transparent",border:"none"}} labelStyle={{display:"none"}} />
+              <Tooltip
+                contentStyle={{ background: "transparent", border: "none" }}
+                labelStyle={{ display: "none" }}
+              />
               <Line
                 type={"monotone"}
                 dataKey={"pv"}
@@ -69,8 +84,11 @@ const Chartbox = () => {
           </ResponsiveContainer>
         </div>
         <div className="texts">
-          <span className="percentage">45%</span>
-          <span className="duration">This Month</span>
+          <span className="percentage">
+            {userStats && userStats.increaseInUsers}
+            {orderStats && orderStats.increaseInOrders}
+          </span>
+          <span className="duration">In Previous Monh</span>
         </div>
       </div>
     </div>

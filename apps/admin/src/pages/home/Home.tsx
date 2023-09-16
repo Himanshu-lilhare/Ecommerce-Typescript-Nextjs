@@ -1,40 +1,38 @@
-import BarChart from "../../components/homeboxes/barchartbox/BarChart"
-import Box1 from "../../components/homeboxes/box1/Box1"
-import Chartbox from "../../components/homeboxes/linechartbox/Chartbox"
+import LoadingSkeleton from "../../components/Loading/skeleton/LoadingSkeleton";
+import BarChart from "../../components/homeboxes/barchartbox/BarChart";
+import Box1 from "../../components/homeboxes/box1/Box1";
+import Chartbox from "../../components/homeboxes/linechartbox/Chartbox";
+import { useGetStatsQuery } from "../../services/statsApi";
 
-import "./home.scss"
+import "./home.scss";
 const Home = () => {
+  const { data, isLoading } = useGetStatsQuery();
+
   return (
     <div className="home">
       <div className="box box1">
-      <Box1/>
+        {isLoading && <LoadingSkeleton />}
+
+        {data?.top3Products && <Box1 top3Products={data?.top3Products} />}
       </div>
       <div className="box box2">
-        <Chartbox/>
+        {isLoading && <LoadingSkeleton />}
+        {data && <Chartbox userStats={data?.userStats} title={"Users"} />}
       </div>
       <div className="box box3">
-      <Chartbox/>
+        {isLoading && <LoadingSkeleton />}
+        {data && <Chartbox orderStats={data?.orderStats} title={"Orders"} />}
       </div>
       <div className="box box4">
-        box4
+        {isLoading && <LoadingSkeleton />}
+        {data && <BarChart />}
       </div>
       <div className="box box5">
-      <Chartbox/>
-      </div>
-      <div className="box box6">
-      <Chartbox/>
-      </div>
-      <div className="box box7">
-box 7
-      </div>
-      <div className="box box8">
-      <BarChart/>
-      </div>
-      <div className="box box9">
-      <BarChart/>
+        {isLoading && <LoadingSkeleton />}
+        {data && <BarChart />}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

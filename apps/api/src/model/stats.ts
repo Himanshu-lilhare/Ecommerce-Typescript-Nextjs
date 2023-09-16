@@ -1,3 +1,4 @@
+import { ProductType } from "common";
 import mongoose from "mongoose";
 import { Document, Schema } from "mongoose";
 
@@ -11,7 +12,7 @@ interface OrderStat {
 }
 
 export interface ITop3Products {
-  product: Schema.Types.ObjectId;
+  product: Schema.Types.ObjectId 
   totalSold: string;
 }
 export interface StatDocument extends Document {
