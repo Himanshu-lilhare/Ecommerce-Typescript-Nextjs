@@ -15,7 +15,7 @@ export async function getTop3ProductsSold() {
       $sort: { totalSold: -1 }, // Sort by totalSold in descending order
     },
     {
-      $limit: 3, // Limit the results to the top 3 products
+      $limit: 5, // Limit the results to the top 3 products
     },
   ]);
 

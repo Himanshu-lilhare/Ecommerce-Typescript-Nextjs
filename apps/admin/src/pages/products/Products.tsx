@@ -1,4 +1,5 @@
 import Table from "../../components/Lists/Table";
+import LoadingSkeleton from "../../components/Loading/skeleton/LoadingSkeleton";
 import AddModal from "../../components/modal/AddModal";
 import { handleScroll } from "../../helpers/handleScroll";
 import { useGetProductsQuery } from "../../services/productsApi";
@@ -15,22 +16,18 @@ const Products = () => {
   return (
     <div className="products">
       <div className="info">
-        <h1>Productss</h1>
+        <h1>Products ({ data ? `${data.length}` : 0  })</h1>
         <button
           onClick={() => {
             handleScroll();
             setOpen(true);
           }}
         >
-          Add User
+          Add Product
         </button>
       </div>
 
-      {isLoading && (
-        <>
-          <h1>Loading....</h1>
-        </>
-      )}
+      {isLoading && <LoadingSkeleton />}
       {data && <Table title="Products" headings={headings} content={data} />}
 
       {open && (

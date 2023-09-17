@@ -39,6 +39,7 @@ export const getAllUsers = tryCatchWrapper(
       {
         $project: {
           _id: 1,
+          email:1,
           name: 1,
           role: 1,
           totalOrders: { $size: "$orders.orderItems" },
@@ -102,20 +103,24 @@ export const getAllProductsForAdmin = tryCatchWrapper(
 );
 export const createproduct = tryCatchWrapper(
   async (req: Request, res: Response, next: NextFunction) => {
+    
+    console.log(req.body.price) 
+    console.log(req.body?.stock + ' stock')
     req.body.price = parseInt(req.body?.price);
     req.body.stock = parseInt(req.body?.stock);
-    const isValid = createProductBody.safeParse(req.body);
 
+    const isValid = createProductBody.safeParse(req.body);
+    console.log("success hone jra")
     if (!isValid.success) {
       return next(
-        new CustomError(isValid.error.errors[0].message.toString(), 400)
+        new CustomError(isValid.error.toString(), 400)
       );
     }
-
+    console.log('succes ho gay test')
     const productData = req.body;
 
     const fileUris = [];
-
+console.log(req.files + " ye files")
     for (let file of req.files as Express.Multer.File[]) {
       fileUris.push(getdatauri(file));
     }

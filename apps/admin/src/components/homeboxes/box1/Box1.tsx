@@ -10,10 +10,14 @@ const Box1 = ({ top3Products }: { top3Products: ITop3Products[] }) => {
           <div className="list-item" key={index}>
             <div className="product">
               <span className="list-index">{index + 1}</span>
-              <span className="product-name">{product.product.description}</span>
+              <span className="product-name">
+                {product.product.description}
+              </span>
             </div>
             <div className="product-price">
-              <span className="amount">{product.totalSold}</span>
+              <span className="amount">
+               Price :  {product.product.price} ({product.totalSold} prodcuts sold)
+              </span>
             </div>
           </div>
         );

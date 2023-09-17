@@ -84,11 +84,18 @@ const Chartbox = ({
           </ResponsiveContainer>
         </div>
         <div className="texts">
-          <span className="percentage">
-            {userStats && userStats.increaseInUsers}
-            {orderStats && orderStats.increaseInOrders}
+          {
+          userStats && <span style={{color:'green'}}  className="percentage">{userStats.increaseInUsers} </span>
+          }
+
+          {
+          orderStats && <span  style={{color:'green'}} className="percentage"> {orderStats.increaseInOrders} </span>
+          }
+
+          <span style={{ marginLeft: "10px" }} className="duration">
+            {" "}
+            Increase Previous Monh
           </span>
-          <span className="duration">In Previous Monh</span>
         </div>
       </div>
     </div>

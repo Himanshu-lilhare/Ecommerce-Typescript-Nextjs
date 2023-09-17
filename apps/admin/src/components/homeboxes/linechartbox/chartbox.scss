@@ -1,39 +1,40 @@
-.chartbox{
+.chartbox {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .chart-info {
+    flex: 1;
     display: flex;
-    height: 100%;
-
-    .chart-info{
-        flex: 2;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .chart-chart {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    .chart {
+      height: 100%;
+      width: 100%;
     }
-    .chart-chart{
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        .chart{
-            height: 100%;
-            width: 100%;
-        }
-        .texts{
-            display: flex;
-            flex-direction: column;
-            align-items: right;
-            .percentage{
-                font-weight: bold;
-                font-size: 20pxs;
-            }
-            .duration{
-                font-size: 14px;
-            }
+    .texts {
+      display: flex;
+      
+      align-items: center;
+      width: 100%;
+      .percentage {
+        font-weight: bold;
+        font-size: 20pxs;
+      }
+      .duration {
+        font-size: 14px;
+      }
 
-            span{
-                text-align: right;
-            }
-        }
+      span {
+        text-align: right;
+      }
     }
-
+  }
 }

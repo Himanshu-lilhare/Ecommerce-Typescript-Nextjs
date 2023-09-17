@@ -1,3 +1,4 @@
+
 import { TProduct } from "../types/product";
 import { rootApi } from "./rootApi";
 
@@ -20,4 +21,4 @@ export const productApi = rootApi.injectEndpoints({
   }),
 });
 
-export const { useGetProductsQuery } = productApi;
+export const { useGetProductsQuery, useEditProductInfoMutation } = productApi;

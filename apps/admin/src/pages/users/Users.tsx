@@ -1,35 +1,20 @@
-import { useState } from "react";
 import "./users.scss";
-import AddModal from "../../components/modal/AddModal";
 import Table from "../../components/Lists/Table";
 import { useGetUsersQuery } from "../../services/usersApi";
-import { handleScroll } from "../../helpers/handleScroll";
+
+import LoadingSkeleton from "../../components/Loading/skeleton/LoadingSkeleton";
 
 const Users = () => {
-  const [open, setOpen] = useState<boolean>(false);
-
   const { data, isLoading } = useGetUsersQuery();
 
-  let headings = ["name", "username", "totalOrders", "amountSpent", "role"];
+  let headings = ["name", "email", "totalOrders", "amountSpent", "role"];
   return (
     <div className="users">
       <div className="info">
-        <h1>Users</h1>
-        <button
-          onClick={() => {
-            handleScroll();
-            setOpen(true);
-          }}
-        >
-          Add User
-        </button>
+        <h1>Users ({data ? `${data.length}` : 0})</h1>
       </div>
-      {isLoading && <h1>Loading....</h1>}
+      {isLoading && <LoadingSkeleton />}
       {data && <Table title="Users" headings={headings} content={data} />}
-
-      {open && (
-        <AddModal slug="user" columns={[1, 2, 3, 4]} setOpen={setOpen} />
-      )}
     </div>
   );
 };

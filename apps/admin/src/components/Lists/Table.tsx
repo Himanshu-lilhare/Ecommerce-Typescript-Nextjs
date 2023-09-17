@@ -45,12 +45,12 @@ function TableBodyRow({
   info,
   index,
   headings,
-  title
+  title,
 }: {
   info: TContent;
   index: number;
   headings: string[];
-  title:string
+  title: string;
 }) {
   const [row, setRow] = useState<TContent>(info);
 
@@ -80,13 +80,13 @@ function TableBoodyRowData({
   index,
   row,
   setRow,
-  title
+  title,
 }: {
   heading: string;
   index: number;
   row: TContent;
   setRow: Dispatch<SetStateAction<TContent>>;
-  title:string
+  title: string;
 }) {
   const [edit, setEdit] = useState<boolean>(false);
   const [value, setValue] = useState<string>((row as any)[heading]);
@@ -97,18 +97,15 @@ function TableBoodyRowData({
   function doneEdit(keys: string) {
     let updatedValue = { ...row, [keys]: value };
     setRow(updatedValue);
-    
-    if(title==="Users"){
+
+    if (title === "Users") {
       updateUser(updatedValue);
     }
-    if(title==="Products"){
+    if (title === "Products") {
       updateUser(updatedValue);
     }
-    if(title==="Ordeers"){
-
+    if (title === "Ordeers") {
     }
-
-    
   }
   return (
     <td key={index}>
@@ -128,7 +125,7 @@ function TableBoodyRowData({
             autoFocus
           />
         ) : (
-          (row as any)[heading]
+          (row as any)[heading] !== undefined ?  (row as any)[heading]  :   (row as any)._id
         )}{" "}
         {GiveIcon(editableFields, heading, edit, setEdit, doneEdit)}
       </span>

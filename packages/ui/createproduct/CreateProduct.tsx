@@ -27,7 +27,7 @@ export const CreateProduct = () => {
     console.log(getValues());
     try {
       const { data: response } = await axios.post(
-        `${serverLink}/createProduct`,
+        `${serverLink}/admin/createProduct`,
         {
           name: data.name,
           description: data.description,
