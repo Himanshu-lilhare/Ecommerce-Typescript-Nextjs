@@ -25,11 +25,11 @@ const Home = () => {
       </div>
       <div className="box box4">
         {isLoading && <LoadingSkeleton />}
-        {data && <BarChart />}
+        {data && <BarChart title="Users"/>}
       </div>
       <div className="box box5">
         {isLoading && <LoadingSkeleton />}
-        {data && <BarChart />}
+        {data && <BarChart title="Products"/>}
       </div>
     </div>
   );

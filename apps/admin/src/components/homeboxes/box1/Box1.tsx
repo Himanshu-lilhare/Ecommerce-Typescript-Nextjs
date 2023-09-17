@@ -16,7 +16,7 @@ const Box1 = ({ top3Products }: { top3Products: ITop3Products[] }) => {
             </div>
             <div className="product-price">
               <span className="amount">
-               Price :  {product.product.price} ({product.totalSold} prodcuts sold)
+               Price :  {product.product.price} ({product.totalSold} prodcut sold)
               </span>
             </div>
           </div>

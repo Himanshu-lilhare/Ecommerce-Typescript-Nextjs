@@ -54,6 +54,7 @@ const AddModal = (props: Props) => {
 
       if (response) {
         setIsloading(false);
+        props.setOpen(false)
         refetch()
       }
     } catch (error) {

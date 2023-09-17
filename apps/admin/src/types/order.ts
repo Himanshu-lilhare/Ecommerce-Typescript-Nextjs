@@ -2,6 +2,6 @@ export type TOrder = {
     _id: string;
     orderId?: string;
     orderStatus: string;
-    createdAt: Date;
+    createdAt: Date|string;
     ownerName: string;
   };

@@ -145,8 +145,8 @@ console.log(req.files + " ye files")
 );
 export const editProductInfo = tryCatchWrapper(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { name, stock, id } = req.body;
-    if (!name && !stock && !id) {
+    const { name, stock, _id } = req.body;
+    if (!name && !stock && !_id) {
       return next(new CustomError("Please Provide which field to Delete", 400));
     }
     const updateProduct: { name?: string; stock?: number } = {};
@@ -158,15 +158,15 @@ export const editProductInfo = tryCatchWrapper(
       updateProduct.stock = parseInt(stock);
     }
 
-    const updatedProduct = await userModel.findByIdAndUpdate(
-      id,
+    const updatedProduct = await product.findByIdAndUpdate(
+      _id,
       updateProduct,
       {
         new: true,
       }
     );
 
-    res.json({ user: updatedProduct });
+    res.json({ product: updatedProduct });
   }
 );
 export const deleteProducts = tryCatchWrapper(

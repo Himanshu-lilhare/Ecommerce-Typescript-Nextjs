@@ -46,11 +46,11 @@ const data = [
     },
   ];
   
-const BarChart = () => {
+const BarChart = ({title}:{title:string}) => {
   return (
     <div className="bar-chart-box">
         <h3>
-ASD
+{title}
         </h3>
         <div className="chart">
         <ResponsiveContainer width="100%" height="100%">

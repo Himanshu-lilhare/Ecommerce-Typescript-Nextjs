@@ -4,6 +4,7 @@ import { TUser } from "../../types/user";
 import { TProduct } from "../../types/product";
 import { TOrder } from "../../types/order";
 import { useEditUserInfoMutation } from "../../services/usersApi";
+import { useEditProductInfoMutation } from "../../services/productsApi";
 
 type TContent = TUser | TProduct | TOrder;
 type TTable = {
@@ -91,7 +92,7 @@ function TableBoodyRowData({
   const [edit, setEdit] = useState<boolean>(false);
   const [value, setValue] = useState<string>((row as any)[heading]);
   const [updateUser] = useEditUserInfoMutation();
-
+  const [updateProduct] = useEditProductInfoMutation();
   let editableFields = "name,role,stock";
 
   function doneEdit(keys: string) {
@@ -102,9 +103,7 @@ function TableBoodyRowData({
       updateUser(updatedValue);
     }
     if (title === "Products") {
-      updateUser(updatedValue);
-    }
-    if (title === "Ordeers") {
+      updateProduct(updatedValue);
     }
   }
   return (
@@ -124,8 +123,10 @@ function TableBoodyRowData({
             value={value}
             autoFocus
           />
+        ) : (row as any)[heading] !== undefined ? (
+          (row as any)[heading]
         ) : (
-          (row as any)[heading] !== undefined ?  (row as any)[heading]  :   (row as any)._id
+          (row as any)._id
         )}{" "}
         {GiveIcon(editableFields, heading, edit, setEdit, doneEdit)}
       </span>

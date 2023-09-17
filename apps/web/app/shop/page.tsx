@@ -2,7 +2,12 @@ import React from "react";
 import { AllProducts, serverLink } from "ui";
 import { cookies } from "next/headers";
 import axios from "axios";
+import Head from "next/head";
+import { Metadata } from "next";
+import { giveMetaData } from "../page";
 
+
+export const metadata: Metadata = giveMetaData('SHOP','This is hop page')
 async function getAllProducts(searchParams: any) {
   // let page = searchParams.page || 1;
   let covertThis = {
@@ -43,6 +48,7 @@ const Shop = async ({ searchParams }: any) => {
 
   return (
     <main className="pad" style={{ minHeight: "100vh" }}>
+    
       <AllProducts
         key={1234}
         products={products}
